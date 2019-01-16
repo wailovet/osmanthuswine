@@ -83,7 +83,8 @@ func Run() {
 				requestData.SyncPostData(request, cc.PostMaxMemory)
 				//HEADER
 				requestData.SyncHeaderData(request)
-
+				//COOKIE
+				requestData.SyncCookieData(request)
 				responseHandle := owstruct.Response{ResWriter: writer}
 				f.Call([]reflect.Value{reflect.ValueOf(requestData), reflect.ValueOf(responseHandle)})
 			} else {

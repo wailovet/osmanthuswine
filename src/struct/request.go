@@ -59,3 +59,11 @@ func (r *Request) SyncHeaderData(request *http.Request) {
 	}
 
 }
+
+func (r *Request) SyncCookieData(request *http.Request) {
+	cookie := request.Cookies()
+	r.COOKIE = make(map[string]string)
+	for k := range cookie {
+		r.COOKIE[cookie[k].Name] = cookie[k].Value
+	}
+}
