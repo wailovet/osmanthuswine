@@ -77,6 +77,7 @@ func Run() {
 			if f.IsValid() {
 				requestData := owstruct.Request{}
 
+
 				//GET
 				requestData.SyncGetData(request)
 				//POST
@@ -85,6 +86,9 @@ func Run() {
 				requestData.SyncHeaderData(request)
 				//COOKIE
 				requestData.SyncCookieData(request)
+
+
+
 				responseHandle := owstruct.Response{ResWriter: writer}
 				f.Call([]reflect.Value{reflect.ValueOf(requestData), reflect.ValueOf(responseHandle)})
 			} else {
