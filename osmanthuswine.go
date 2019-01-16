@@ -15,8 +15,8 @@ import (
 	"encoding/json"
 	"unicode"
 	"reflect"
-	"./src/struct"
-	"./src/registered"
+	"github.com/wailovet/osmanthuswine/src/registered"
+	"github.com/wailovet/osmanthuswine/src/struct"
 )
 
 func getModuleName(name string) string {
