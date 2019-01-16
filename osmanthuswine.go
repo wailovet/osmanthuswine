@@ -83,15 +83,14 @@ func Run() {
 				body, _ := ioutil.ReadAll(request.Body)
 				requestData.BODY = string(body)
 
-				if request.MultipartForm.File != nil {
+				if request.MultipartForm != nil {
 					requestData.FILES = request.MultipartForm.File
+					mf := request.MultipartForm.Value
+					for k := range mf {
+						requestData.POST[k] = request.MultipartForm.Value[k][0]
+					}
 				}
 
-				mf := request.MultipartForm.Value
-
-				for k := range mf {
-					requestData.POST[k] = request.MultipartForm.Value[k][0]
-				}
 
 				request.ParseForm()
 				post := request.PostForm
