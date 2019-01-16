@@ -83,9 +83,15 @@ func Run() {
 				}
 
 				request.ParseForm()
-
 				request.ParseMultipartForm(cc.PostMaxMemory)
 
+				post := request.PostForm
+				for k := range post {
+					requestData.POST[k] = request.PostFormValue(k)
+				}
+
+
+				requestData.POST = make(map[string]string)
 				if request.MultipartForm != nil {
 					requestData.FILES = request.MultipartForm.File
 					mf := request.MultipartForm.Value
@@ -94,12 +100,6 @@ func Run() {
 							requestData.POST[k] = mf[k][0]
 						}
 					}
-				}
-
-				post := request.PostForm
-				requestData.POST = make(map[string]string)
-				for k := range post {
-					requestData.POST[k] = request.PostFormValue(k)
 				}
 
 				body, _ := ioutil.ReadAll(request.Body)
