@@ -1,4 +1,4 @@
-package owstruct
+package core
 
 import (
 	"mime/multipart"
