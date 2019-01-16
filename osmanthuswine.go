@@ -84,7 +84,7 @@ func Run() {
 
 				request.ParseForm()
 
-				request.ParseMultipartForm(cc.MaxMemory)
+				request.ParseMultipartForm(cc.PostMaxMemory)
 
 				if request.MultipartForm != nil {
 					requestData.FILES = request.MultipartForm.File
