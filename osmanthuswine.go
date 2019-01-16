@@ -80,6 +80,12 @@ func Run() {
 					requestData.GET[k] = request.URL.Query().Get(k)
 				}
 
+				post := request.PostForm
+				requestData.POST = make(map[string]string)
+				for k := range post {
+					requestData.POST[k] = request.PostFormValue(k)
+				}
+
 				body, _ := ioutil.ReadAll(request.Body)
 				requestData.BODY = string(body)
 
