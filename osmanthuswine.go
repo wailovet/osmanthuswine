@@ -78,46 +78,11 @@ func Run() {
 				requestData := owstruct.Request{}
 
 				//GET
-				get := request.URL.Query()
-				requestData.GET = make(map[string]string)
-				for k := range get {
-					requestData.GET[k] = request.URL.Query().Get(k)
-				}
-
+				requestData.SyncGetData(request)
 				//POST
-				request.ParseForm()
-				request.ParseMultipartForm(cc.PostMaxMemory)
-				requestData.POST = make(map[string]string)
-
-				post := request.PostForm
-				for k := range post {
-					requestData.POST[k] = request.PostFormValue(k)
-				}
-
-				if request.MultipartForm != nil {
-					requestData.FILES = request.MultipartForm.File
-					mf := request.MultipartForm.Value
-					for k := range mf {
-						if len(mf[k]) > 0 {
-							requestData.POST[k] = mf[k][0]
-						}
-					}
-				}
-
-
+				requestData.SyncPostData(request, cc.PostMaxMemory)
 				//HEADER
-				requestData.HEADER = make(map[string]string)
-				header := request.Header
-				for k := range header {
-					if len(header[k]) > 0 {
-						requestData.HEADER[k] = header[k][0]
-					}
-				}
-
-
-				//RAW
-				body, _ := ioutil.ReadAll(request.Body)
-				requestData.BODY = string(body)
+				requestData.SyncHeaderData(request)
 
 				responseHandle := owstruct.Response{ResWriter: writer}
 				f.Call([]reflect.Value{reflect.ValueOf(requestData), reflect.ValueOf(responseHandle)})

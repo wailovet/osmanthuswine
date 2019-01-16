@@ -17,7 +17,7 @@ type Request struct {
 	FILES   map[string][]*multipart.FileHeader
 }
 
-func (r *Request) SyncGetData(request *http.Request, mem int64) {
+func (r *Request) SyncGetData(request *http.Request) {
 	get := request.URL.Query()
 	r.GET = make(map[string]string)
 	for k := range get {
