@@ -80,6 +80,8 @@ func Run() {
 					requestData.GET[k] = request.URL.Query().Get(k)
 				}
 
+
+				request.ParseForm()
 				post := request.PostForm
 				requestData.POST = make(map[string]string)
 				for k := range post {
