@@ -17,7 +17,6 @@ import (
 	"reflect"
 	"github.com/wailovet/osmanthuswine/src/registered"
 	"github.com/wailovet/osmanthuswine/src/struct"
-	"mime/multipart"
 )
 
 func getModuleName(name string) string {
@@ -84,11 +83,8 @@ func Run() {
 				body, _ := ioutil.ReadAll(request.Body)
 				requestData.BODY = string(body)
 
-				files := request.MultipartForm.File
-				requestData.FILES = make(map[string][]*multipart.FileHeader)
-
-				for k := range files {
-					requestData.FILES[k] = request.MultipartForm.File[k]
+				if request.MultipartForm.File != nil {
+					requestData.FILES = request.MultipartForm.File
 				}
 
 				mf := request.MultipartForm.Value
