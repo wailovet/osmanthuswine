@@ -15,8 +15,8 @@ import (
 	"encoding/json"
 	"unicode"
 	"reflect"
-	"github.com/wailovet/osmanthuswine/src/struct"
-	"github.com/wailovet/osmanthuswine/src/registered"
+	"./src/struct"
+	"./src/registered"
 )
 
 func getModuleName(name string) string {
@@ -80,6 +80,16 @@ func Run() {
 					requestData.GET[k] = request.URL.Query().Get(k)
 				}
 
+				body, _ := ioutil.ReadAll(request.Body)
+				requestData.BODY = string(body)
+
+				requestData.FILES = request.MultipartForm.File
+
+				mf := request.MultipartForm.Value
+
+				for k := range mf {
+					requestData.POST[k] = request.MultipartForm.Value[k][0]
+				}
 
 				request.ParseForm()
 				post := request.PostForm
@@ -87,9 +97,6 @@ func Run() {
 				for k := range post {
 					requestData.POST[k] = request.PostFormValue(k)
 				}
-
-				body, _ := ioutil.ReadAll(request.Body)
-				requestData.BODY = string(body)
 
 				responseHandle := owstruct.Response{ResWriter: writer}
 				f.Call([]reflect.Value{reflect.ValueOf(requestData), reflect.ValueOf(responseHandle)})
