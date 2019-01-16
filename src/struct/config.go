@@ -8,10 +8,10 @@ import (
 )
 
 type Config struct {
-	Port        string `json:"port"`
-	Host        string `json:"host"`
-	CrossDomain string `json:"cross_domain"`
-	PMaxMemory   int64  `json:"post_max_memory"`
+	Port          string `json:"port"`
+	Host          string `json:"host"`
+	CrossDomain   string `json:"cross_domain"`
+	PostMaxMemory int64  `json:"post_max_memory"`
 }
 
 func (c *Config) ReadConfig(file string) {
@@ -21,4 +21,15 @@ func (c *Config) ReadConfig(file string) {
 		os.Exit(0)
 	}
 	json.Unmarshal(configText, *c)
+
+	if c.PostMaxMemory <= 0 {
+		c.PostMaxMemory = 1024 * 1024 * 10
+	}
+	if c.Host == "" {
+		c.Host = "127.0.0.1"
+	}
+	if c.Port == "" {
+		c.Port = "8808"
+	}
+
 }

@@ -49,6 +49,9 @@ func Run() {
 	os.Chdir(path)
 	log.Println("工作目录:", path)
 
+	cc := owstruct.Config{}
+	cc.ReadConfig("./config/main.json")
+
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
@@ -80,9 +83,9 @@ func Run() {
 					requestData.GET[k] = request.URL.Query().Get(k)
 				}
 
-
 				request.ParseForm()
 
+				request.ParseMultipartForm(cc.MaxMemory)
 
 				if request.MultipartForm != nil {
 					requestData.FILES = request.MultipartForm.File
@@ -100,7 +103,6 @@ func Run() {
 
 				body, _ := ioutil.ReadAll(request.Body)
 				requestData.BODY = string(body)
-
 
 				responseHandle := owstruct.Response{ResWriter: writer}
 				f.Call([]reflect.Value{reflect.ValueOf(requestData), reflect.ValueOf(responseHandle)})
@@ -130,15 +132,6 @@ func Run() {
 		}
 	})
 
-	configText, err := ioutil.ReadFile("./config/main.json")
-
-	cc := new(owstruct.Config)
-	if err != nil {
-		log.Println("配置文件错误,启动失败:", err.Error())
-		os.Exit(0)
-	}
-
-	json.Unmarshal(configText, cc)
 	log.Println("开始监听:", cc.Host+":"+cc.Port)
 	http.ListenAndServe(cc.Host+":"+cc.Port, r)
 }
