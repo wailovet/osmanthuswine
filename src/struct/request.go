@@ -3,6 +3,7 @@ package owstruct
 import (
 	"mime/multipart"
 	"net/http"
+	"io/ioutil"
 )
 
 type Request struct {
@@ -16,7 +17,15 @@ type Request struct {
 	FILES   map[string][]*multipart.FileHeader
 }
 
-func (r *Request) SyncPostData(request *http.Request,mem int64) {
+func (r *Request) SyncGetData(request *http.Request, mem int64) {
+	get := request.URL.Query()
+	r.GET = make(map[string]string)
+	for k := range get {
+		r.GET[k] = request.URL.Query().Get(k)
+	}
+}
+
+func (r *Request) SyncPostData(request *http.Request, mem int64) {
 	request.ParseForm()
 	request.ParseMultipartForm(mem)
 	r.POST = make(map[string]string)
@@ -35,4 +44,18 @@ func (r *Request) SyncPostData(request *http.Request,mem int64) {
 			}
 		}
 	}
+
+	body, _ := ioutil.ReadAll(request.Body)
+	r.BODY = string(body)
+}
+
+func (r *Request) SyncHeaderData(request *http.Request) {
+	r.HEADER = make(map[string]string)
+	header := request.Header
+	for k := range header {
+		if len(header[k]) > 0 {
+			r.HEADER[k] = header[k][0]
+		}
+	}
+
 }
