@@ -80,8 +80,9 @@ func Run() {
 					requestData.GET[k] = request.URL.Query().Get(k)
 				}
 
-				body, _ := ioutil.ReadAll(request.Body)
-				requestData.BODY = string(body)
+
+				request.ParseForm()
+
 
 				if request.MultipartForm != nil {
 					requestData.FILES = request.MultipartForm.File
@@ -91,13 +92,15 @@ func Run() {
 					}
 				}
 
-
-				request.ParseForm()
 				post := request.PostForm
 				requestData.POST = make(map[string]string)
 				for k := range post {
 					requestData.POST[k] = request.PostFormValue(k)
 				}
+
+				body, _ := ioutil.ReadAll(request.Body)
+				requestData.BODY = string(body)
+
 
 				responseHandle := owstruct.Response{ResWriter: writer}
 				f.Call([]reflect.Value{reflect.ValueOf(requestData), reflect.ValueOf(responseHandle)})
