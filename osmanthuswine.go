@@ -12,43 +12,16 @@ import (
 	"strings"
 	"errors"
 	"log"
-	"unicode"
 	"reflect"
-	"github.com/wailovet/osmanthuswine/src/registered"
-	"github.com/wailovet/osmanthuswine/src/struct"
+	"github.com/wailovet/osmanthuswine/src/core"
 )
-
-func getModuleName(name string) string {
-	if name == "" {
-		return "index"
-	}
-	return strings.ToLower(name)
-}
-func getControllerName(name string) string {
-	if name == "" {
-		return "Index"
-	}
-	for i, v := range name {
-		return string(unicode.ToUpper(v)) + name[i+1:]
-	}
-	return "Index"
-}
-func getFunName(name string) string {
-	if name == "" {
-		return "Index"
-	}
-	for i, v := range name {
-		return string(unicode.ToUpper(v)) + name[i+1:]
-	}
-	return "Index"
-}
 
 func Run() {
 	path, _ := GetCurrentPath()
 	os.Chdir(path)
 	log.Println("工作目录:", path)
 
-	cc := owstruct.Config{}
+	cc := core.Config{}
 	cc.ReadConfig("./config/main.json")
 
 	r := chi.NewRouter()
@@ -60,44 +33,24 @@ func Run() {
 	r.Use(middleware.Timeout(60 * time.Second))
 
 	r.HandleFunc("/Api/*", func(writer http.ResponseWriter, request *http.Request) {
-		sar := strings.Split(request.URL.Path, "/")
 
-		for ; len(sar) < 5; {
-			sar = append(sar, "")
-		}
+		requestData := core.Request{}
 
-		module := getModuleName(sar[2])
-		controller := getControllerName(sar[3])
-		fun := getFunName(sar[4])
+		//GET
+		requestData.SyncGetData(request)
+		//POST
+		requestData.SyncPostData(request, cc.PostMaxMemory)
+		//HEADER
+		requestData.SyncHeaderData(request)
+		//COOKIE
+		requestData.SyncCookieData(request)
 
-		ctr := "*" + module + "." + controller
-		_, ok := registered.RegisteredData[ctr]
-		if ok {
-			f := registered.RegisteredData[ctr].MethodByName(fun)
-			if f.IsValid() {
-				requestData := owstruct.Request{}
+		responseHandle := core.Response{ResWriter: writer}
 
-
-				//GET
-				requestData.SyncGetData(request)
-				//POST
-				requestData.SyncPostData(request, cc.PostMaxMemory)
-				//HEADER
-				requestData.SyncHeaderData(request)
-				//COOKIE
-				requestData.SyncCookieData(request)
-
-
-
-				responseHandle := owstruct.Response{ResWriter: writer}
-				f.Call([]reflect.Value{reflect.ValueOf(requestData), reflect.ValueOf(responseHandle)})
-			} else {
-				writer.WriteHeader(404)
-			}
-		} else {
+		ok := core.GetInstance().RouterSend(request.URL.Path, requestData, responseHandle)
+		if ok == nil {
 			writer.WriteHeader(404)
 		}
-
 		writer.Write([]byte(""))
 
 	})
