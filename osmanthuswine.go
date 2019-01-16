@@ -90,7 +90,6 @@ func Run() {
 					requestData.POST[k] = request.PostFormValue(k)
 				}
 
-
 				requestData.POST = make(map[string]string)
 				if request.MultipartForm != nil {
 					requestData.FILES = request.MultipartForm.File
