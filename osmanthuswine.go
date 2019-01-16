@@ -76,12 +76,15 @@ func Run() {
 			f := registered.RegisteredData[ctr].MethodByName(fun)
 			if f.IsValid() {
 				requestData := owstruct.Request{}
+
+				//GET
 				get := request.URL.Query()
 				requestData.GET = make(map[string]string)
 				for k := range get {
 					requestData.GET[k] = request.URL.Query().Get(k)
 				}
 
+				//POST
 				request.ParseForm()
 				request.ParseMultipartForm(cc.PostMaxMemory)
 				requestData.POST = make(map[string]string)
@@ -101,6 +104,18 @@ func Run() {
 					}
 				}
 
+
+				//HEADER
+				requestData.HEADER = make(map[string]string)
+				header := request.Header
+				for k := range header {
+					if len(header[k]) > 0 {
+						requestData.HEADER[k] = header[k][0]
+					}
+				}
+
+
+				//RAW
 				body, _ := ioutil.ReadAll(request.Body)
 				requestData.BODY = string(body)
 
