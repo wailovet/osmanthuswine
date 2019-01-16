@@ -90,7 +90,9 @@ func Run() {
 					requestData.FILES = request.MultipartForm.File
 					mf := request.MultipartForm.Value
 					for k := range mf {
-						requestData.POST[k] = request.MultipartForm.Value[k][0]
+						if len(mf[k]) > 0 {
+							requestData.POST[k] = mf[k][0]
+						}
 					}
 				}
 
