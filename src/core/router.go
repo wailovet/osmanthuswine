@@ -6,16 +6,13 @@ import (
 	"unicode"
 )
 
-var manage *RouterManage
+var manage RouterManage
 
 type RouterManage struct {
 	RegisteredData map[string]reflect.Value
 }
 
-func GetInstanceRouterManage() *RouterManage {
-	if manage == nil {
-		manage = new(RouterManage)
-	}
+func GetInstanceRouterManage() RouterManage {
 	return manage
 }
 
