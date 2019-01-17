@@ -47,7 +47,7 @@ func Run() {
 
 		responseHandle := core.Response{ResWriter: writer}
 
-		ok := core.GetInstance().RouterSend(request.URL.Path, requestData, responseHandle)
+		ok := core.GetInstanceRouterManage().RouterSend(request.URL.Path, requestData, responseHandle)
 		if ok == nil {
 			writer.WriteHeader(404)
 		}
