@@ -13,7 +13,6 @@ import (
 	"errors"
 	"log"
 	"github.com/wailovet/osmanthuswine/src/core"
-	"github.com/wailovet/osmanthuswine"
 )
 
 func Run() {
@@ -45,9 +44,9 @@ func Run() {
 		//COOKIE
 		requestData.SyncCookieData(request)
 
-		responseHandle := osmanthuswine.Response{ResWriter: writer}
+		responseHandle := core.Response{ResWriter: writer}
 
-		ok := osmanthuswine.GetInstanceRouterManage().RouterSend(request.URL.Path, requestData, responseHandle)
+		ok := core.GetInstanceRouterManage().RouterSend(request.URL.Path, requestData, responseHandle)
 		if ok == nil {
 			writer.WriteHeader(404)
 		}

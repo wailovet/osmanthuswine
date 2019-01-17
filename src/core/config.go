@@ -1,4 +1,4 @@
-package osmanthuswine
+package core
 
 import (
 	"io/ioutil"
