@@ -16,13 +16,16 @@ type Config struct {
 }
 
 func (c *Config) ReadConfig(file string) {
-	configText, err := ioutil.ReadFile("./config/main.json")
+	configText, err := ioutil.ReadFile(file)
 	if err != nil {
 		helper.GetInstanceLog().Out("配置文件错误,启动失败:", err.Error())
 		os.Exit(0)
 	}
-	json.Unmarshal(configText, *c)
-
+	err = json.Unmarshal(configText, *c)
+	if err != nil {
+		helper.GetInstanceLog().Out("配置文件错误,启动失败:", err.Error())
+		os.Exit(0)
+	}
 	if c.PostMaxMemory <= 0 {
 		c.PostMaxMemory = 1024 * 1024 * 10
 	}
