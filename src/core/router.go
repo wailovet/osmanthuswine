@@ -44,6 +44,8 @@ func (rm *RouterManage) getFunName(name string) string {
 	if name == "" {
 		return "Index"
 	}
+	tmp := strings.Split(name, ".")
+	name = strings.Join(tmp[0:len(tmp)-1], ".")
 	for i, v := range name {
 		return string(unicode.ToUpper(v)) + name[i+1:]
 	}
