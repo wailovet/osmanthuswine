@@ -1,9 +1,9 @@
-##内部属用基于go-chi的web框架
+## 内部属用基于go-chi的web框架
 
-#框架引入
+# 框架引入
 > go get -u github.com/wailovet/osmanthuswine
 
-###目录结构
+### 目录结构
 ```
 app
  |--index
