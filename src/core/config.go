@@ -11,7 +11,7 @@ type Config struct {
 	Port          string `json:"port"`
 	Host          string `json:"host"`
 	CrossDomain   string `json:"cross_domain"`
-	ApiRouter   string `json:"api_router"`
+	ApiRouter     string `json:"api_router"`
 	PostMaxMemory int64  `json:"post_max_memory"`
 }
 
@@ -31,6 +31,12 @@ func (c *Config) ReadConfig(file string) {
 	}
 	if c.Port == "" {
 		c.Port = "8808"
+	}
+	if c.ApiRouter == "" {
+		c.ApiRouter = "/Api/*"
+	}
+	if c.CrossDomain == "" {
+		c.CrossDomain = "*"
 	}
 
 }
