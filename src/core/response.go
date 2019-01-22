@@ -67,6 +67,12 @@ func (r *Response) SetSession(name string, value string) {
 	r.Session.SetSession(data)
 }
 
+func (r *Response) DeleteSession(name string) {
+	data := r.Session.GetSession()
+	delete(data, name)
+	r.Session.SetSession(data)
+}
+
 func (r *Response) SetCookie(name string, value string) {
 	cookie := &http.Cookie{
 		Name:     name,
