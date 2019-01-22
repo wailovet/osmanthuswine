@@ -31,8 +31,12 @@ func Run() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))
+	apiRouter := cc.CrossDomain
+	if apiRouter == "" {
+		apiRouter = "/Api/*"
+	}
 
-	r.HandleFunc("/Api/*", func(writer http.ResponseWriter, request *http.Request) {
+	r.HandleFunc(apiRouter, func(writer http.ResponseWriter, request *http.Request) {
 
 		requestData := core.Request{}
 
