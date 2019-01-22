@@ -3,6 +3,7 @@ package session
 import (
 	"github.com/gorilla/securecookie"
 	"net/http"
+	"github.com/wailovet/osmanthuswine/src/helper"
 )
 
 type Session struct {
@@ -27,6 +28,8 @@ func (session *Session) GetSession() map[string]string {
 	value := make(map[string]string)
 	if cookie, err := session.r.Cookie("osmseccidhas"); err == nil {
 		session.secureCookie.Decode("osmseccidhas", cookie.Value, value)
+	}else {
+		helper.GetInstanceLog().Out(err.Error())
 	}
 	return value
 }
