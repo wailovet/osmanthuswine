@@ -14,6 +14,6 @@ func GetInstanceLog() *Log {
 	return instanceLog
 }
 
-func (l *Log) out(args ...string) {
+func (l *Log) Out(args ...string) {
 	log.Println(args)
 }
