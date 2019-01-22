@@ -15,6 +15,7 @@ var instanceRouterManage *RouterManage
 func GetInstanceRouterManage() *RouterManage {
 	if instanceRouterManage == nil {
 		instanceRouterManage = &RouterManage{} // not thread safe
+		instanceRouterManage.RegisteredData = make(map[string]reflect.Value)
 	}
 	return instanceRouterManage
 }
