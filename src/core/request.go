@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"io/ioutil"
 	"github.com/wailovet/osmanthuswine/src/session"
+	"net/url"
+	"github.com/wailovet/osmanthuswine/src/helper"
 )
 
 type Request struct {
@@ -22,7 +24,14 @@ func (r *Request) SyncGetData(request *http.Request) {
 	get := request.URL.Query()
 	r.GET = make(map[string]string)
 	for k := range get {
-		r.GET[k] = request.URL.Query().Get(k)
+		getstr := request.URL.Query().Get(k)
+		tmp, err := url.QueryUnescape(getstr)
+		if err != nil {
+			helper.GetInstanceLog().Out(err.Error())
+			r.GET[k] = getstr
+		}else{
+			r.GET[k] = tmp
+		}
 	}
 }
 
