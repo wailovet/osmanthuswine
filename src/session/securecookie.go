@@ -35,7 +35,7 @@ func (session *Session) SetSession(value map[string]string) {
 	if value == nil {
 		return
 	}
-	if encoded, err := session.secureCookie.Encode("osm-sec-cid-has", value); err == nil {
+	if encoded, err := session.secureCookie.Encode("osmseccidhas", value); err == nil {
 		cookie := &http.Cookie{
 			Name:     "osmseccidhas",
 			Value:    encoded,
