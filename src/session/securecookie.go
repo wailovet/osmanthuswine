@@ -25,8 +25,8 @@ func New(r *http.Request, w http.ResponseWriter) *Session {
 
 func (session *Session) GetSession() map[string]string {
 	value := make(map[string]string)
-	if cookie, err := session.r.Cookie("osm-sec-cid-has"); err == nil {
-		session.secureCookie.Decode("osm-sec-cid-has", cookie.Value, value)
+	if cookie, err := session.r.Cookie("osmseccidhas"); err == nil {
+		session.secureCookie.Decode("osmseccidhas", cookie.Value, value)
 	}
 	return value
 }
@@ -37,9 +37,11 @@ func (session *Session) SetSession(value map[string]string) {
 	}
 	if encoded, err := session.secureCookie.Encode("osm-sec-cid-has", value); err == nil {
 		cookie := &http.Cookie{
-			Name:     "osm-sec-cid-has",
+			Name:     "osmseccidhas",
 			Value:    encoded,
 			Path:     "/",
+			Secure:   false,
+			HttpOnly: false,
 		}
 		http.SetCookie(session.w, cookie)
 	}
