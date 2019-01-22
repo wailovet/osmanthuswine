@@ -14,7 +14,7 @@ type ResponseData struct {
 
 type Response struct {
 	ResWriter http.ResponseWriter
-	Session   session.Session
+	Session   *session.Session
 }
 
 func (r *Response) DisplayByString(data string) {
