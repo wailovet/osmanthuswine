@@ -38,7 +38,7 @@ func SetSession(w http.ResponseWriter, value map[string]string) {
 	session := GetInstanceSession()
 	if encoded, err := session.secureCookie.Encode("osm-sec-cid-has", value); err == nil {
 		cookie := &http.Cookie{
-			Name:     "cookie-name",
+			Name:     "osm-sec-cid-has",
 			Value:    encoded,
 			Path:     "/",
 			Secure:   true,
