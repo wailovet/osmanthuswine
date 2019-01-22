@@ -51,7 +51,7 @@ func Run() {
 		//SESSION
 		requestData.SyncSessionData(sessionMan)
 
-		responseHandle := core.Response{ResWriter: writer, sessionMan}
+		responseHandle := core.Response{ResWriter: writer, Session: sessionMan}
 
 		if cc.CrossDomain != "" {
 			responseHandle.ResWriter.Header().Set("Access-Control-Allow-Origin", cc.CrossDomain)
