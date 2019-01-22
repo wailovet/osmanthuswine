@@ -31,7 +31,7 @@ func Run() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))
-	apiRouter := cc.CrossDomain
+	apiRouter := cc.ApiRouter
 
 	r.HandleFunc(apiRouter, func(writer http.ResponseWriter, request *http.Request) {
 
