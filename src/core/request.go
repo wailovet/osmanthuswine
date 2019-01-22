@@ -24,11 +24,11 @@ func (r *Request) SyncGetData(request *http.Request) {
 	get := request.URL.Query()
 	r.GET = make(map[string]string)
 	for k := range get {
-		getstr := request.URL.Query().Get(k)
-		tmp, err := url.QueryUnescape(getstr)
+		str := request.URL.Query().Get(k)
+		tmp, err := url.QueryUnescape(str)
 		if err != nil {
 			helper.GetInstanceLog().Out(err.Error())
-			r.GET[k] = getstr
+			r.GET[k] = str
 		}else{
 			r.GET[k] = tmp
 		}
@@ -42,7 +42,14 @@ func (r *Request) SyncPostData(request *http.Request, mem int64) {
 
 	post := request.PostForm
 	for k := range post {
-		r.POST[k] = request.PostFormValue(k)
+		str := request.PostFormValue(k)
+		tmp, err := url.QueryUnescape(str)
+		if err != nil {
+			helper.GetInstanceLog().Out(err.Error())
+			r.POST[k] = str
+		}else{
+			r.POST[k] = tmp
+		}
 	}
 
 	if request.MultipartForm != nil {
