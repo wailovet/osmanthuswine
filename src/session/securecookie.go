@@ -7,35 +7,31 @@ import (
 
 type Session struct {
 	secureCookie *securecookie.SecureCookie
+	r            *http.Request
+	w            *http.ResponseWriter
 }
 
-var instanceSession *Session
-
-func GetInstanceSession() *Session {
-	if instanceSession == nil {
-		instanceSession = &Session{} // not thread safe
-
-		// Hash keys should be at least 32 bytes long
-		var hashKey = []byte("osmanthuswine-very-secret")
-		// Block keys should be 16 bytes (AES-128) or 32 bytes (AES-256) long.
-		// Shorter keys may weaken the encryption used.
-		var blockKey = []byte("osmanthuswine-lot-secret")
-		instanceSession.secureCookie = securecookie.New(hashKey, blockKey)
-	}
-	return instanceSession
+func New(r *http.Request, w *http.ResponseWriter) *Session {
+	session := &Session{} // not thread safe
+	var hashKey = []byte("osmanthuswine-very-secret")
+	// Block keys should be 16 bytes (AES-128) or 32 bytes (AES-256) long.
+	// Shorter keys may weaken the encryption used.
+	var blockKey = []byte("osmanthuswine-lot-secret")
+	session.secureCookie = securecookie.New(hashKey, blockKey)
+	session.r = r
+	session.w = w
+	return session
 }
 
-func GetSession(r *http.Request) map[string]string {
+func (session *Session) GetSession() map[string]string {
 	value := make(map[string]string)
-	if cookie, err := r.Cookie("osm-sec-cid-has"); err == nil {
-		session := GetInstanceSession()
+	if cookie, err := session.r.Cookie("osm-sec-cid-has"); err == nil {
 		session.secureCookie.Decode("osm-sec-cid-has", cookie.Value, value)
 	}
 	return value
 }
 
-func SetSession(w http.ResponseWriter, value map[string]string) {
-	session := GetInstanceSession()
+func (session *Session) SetSession(value map[string]string) {
 	if encoded, err := session.secureCookie.Encode("osm-sec-cid-has", value); err == nil {
 		cookie := &http.Cookie{
 			Name:     "osm-sec-cid-has",
@@ -44,6 +40,6 @@ func SetSession(w http.ResponseWriter, value map[string]string) {
 			Secure:   true,
 			HttpOnly: true,
 		}
-		http.SetCookie(w, cookie)
+		http.SetCookie(session.w, cookie)
 	}
 }
