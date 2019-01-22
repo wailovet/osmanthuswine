@@ -10,7 +10,7 @@ app
       |--controller
              |--index.go
 config
- |--config.json
+ |--main.json
 html
  |--静态文件....
 main.go
@@ -18,10 +18,12 @@ main.go
 
 # 开始
 #### 创建以上目录结构
-> main.go文件
+> /main.go文件
 ```
 func main() {
+	//注册index控制器
 	core.GetInstanceRouterManage().Registered(&index.Index{})
+	//主程序执行
 	osmanthuswine.Run()
 }
 ```
@@ -42,4 +44,14 @@ func (n *Index) Index(req core.Request, res core.Response) {
 	res.DisplayByData(req)
 }
 
+```
+
+>/config/main.json
+```json
+{
+  "port": "8808",
+  "host": "0.0.0.0",
+  "cross_domain": "*",
+  "post_max_memory": 1024000
+}
 ```
