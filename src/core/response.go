@@ -64,3 +64,9 @@ func (r *Response) DisplayByData(data interface{}) {
 func (r *Response) SetSession(value map[string]string) {
 	r.session.SetSession(value)
 }
+
+func (r *Response) SetSessionValue(name string, value string) {
+	data := r.session.GetSession()
+	data[name] = value
+	r.session.SetSession(data)
+}
