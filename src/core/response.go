@@ -61,12 +61,23 @@ func (r *Response) DisplayByData(data interface{}) {
 	r.DisplayByRaw(text)
 }
 
-func (r *Response) SetSession(value map[string]string) {
-	r.Session.SetSession(value)
-}
-
-func (r *Response) SetSessionValue(name string, value string) {
+func (r *Response) SetSession(name string, value string) {
 	data := r.Session.GetSession()
 	data[name] = value
 	r.Session.SetSession(data)
+}
+
+func (r *Response) SetCookie(name string, value string) {
+	cookie := &http.Cookie{
+		Name:     name,
+		Value:    value,
+		Path:     "/",
+		Secure:   false,
+		HttpOnly: false,
+	}
+	http.SetCookie(r.ResWriter, cookie)
+}
+
+func (r *Response) SetHeader(name string, value string) {
+	r.ResWriter.Header().Set(name, value)
 }
