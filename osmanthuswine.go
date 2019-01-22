@@ -38,7 +38,7 @@ func Run() {
 
 		requestData := core.Request{}
 
-		sessionMan := session.New(request, &writer)
+		sessionMan := session.New(request, writer)
 
 		//GET
 		requestData.SyncGetData(request)

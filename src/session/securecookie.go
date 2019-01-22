@@ -8,10 +8,10 @@ import (
 type Session struct {
 	secureCookie *securecookie.SecureCookie
 	r            *http.Request
-	w            *http.ResponseWriter
+	w            http.ResponseWriter
 }
 
-func New(r *http.Request, w *http.ResponseWriter) *Session {
+func New(r *http.Request, w http.ResponseWriter) *Session {
 	session := &Session{} // not thread safe
 	var hashKey = []byte("osmanthuswine-very-secret")
 	// Block keys should be 16 bytes (AES-128) or 32 bytes (AES-256) long.
