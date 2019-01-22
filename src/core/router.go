@@ -6,14 +6,17 @@ import (
 	"unicode"
 )
 
-var manage RouterManage
+var instanceRouterManage *RouterManage
 
 type RouterManage struct {
 	RegisteredData map[string]reflect.Value
 }
 
-func GetInstanceRouterManage() RouterManage {
-	return manage
+func GetInstanceRouterManage() *RouterManage {
+	if instanceRouterManage == nil {
+		instanceRouterManage = &RouterManage{} // not thread safe
+	}
+	return instanceRouterManage
 }
 
 func (rm *RouterManage) Registered(i interface{}) {
