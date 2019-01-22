@@ -3,7 +3,6 @@ package session
 import (
 	"github.com/gorilla/securecookie"
 	"net/http"
-	"github.com/wailovet/osmanthuswine/src/helper"
 )
 
 type Session struct {
