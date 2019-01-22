@@ -32,6 +32,9 @@ func (session *Session) GetSession() map[string]string {
 }
 
 func (session *Session) SetSession(value map[string]string) {
+	if value == nil {
+		return
+	}
 	if encoded, err := session.secureCookie.Encode("osm-sec-cid-has", value); err == nil {
 		cookie := &http.Cookie{
 			Name:     "osm-sec-cid-has",
