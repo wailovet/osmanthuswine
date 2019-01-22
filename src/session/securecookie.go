@@ -10,6 +10,7 @@ type Session struct {
 	secureCookie *securecookie.SecureCookie
 	r            *http.Request
 	w            http.ResponseWriter
+	data         map[string]string
 }
 
 func New(r *http.Request, w http.ResponseWriter) *Session {
@@ -21,23 +22,21 @@ func New(r *http.Request, w http.ResponseWriter) *Session {
 	session.secureCookie = securecookie.New(hashKey, blockKey)
 	session.r = r
 	session.w = w
+
+	session.data = make(map[string]string)
+	if cookie, err := session.r.Cookie("osmseccidhas"); err == nil {
+		session.secureCookie.Decode("osmseccidhas", cookie.Value, &session.data)
+	} else {
+		helper.GetInstanceLog().Out(err.Error())
+	}
 	return session
 }
 
 func (session *Session) GetSession() map[string]string {
-	value := make(map[string]string)
-	if cookie, err := session.r.Cookie("osmseccidhas"); err == nil {
-		session.secureCookie.Decode("osmseccidhas", cookie.Value,&value)
-	}else {
-		helper.GetInstanceLog().Out(err.Error())
-	}
-	return value
+	return session.data
 }
 
 func (session *Session) SetSession(value map[string]string) {
-	if value == nil {
-		return
-	}
 	if encoded, err := session.secureCookie.Encode("osmseccidhas", value); err == nil {
 		cookie := &http.Cookie{
 			Name:     "osmseccidhas",
@@ -47,5 +46,6 @@ func (session *Session) SetSession(value map[string]string) {
 			HttpOnly: false,
 		}
 		http.SetCookie(session.w, cookie)
+		session.data = value
 	}
 }
