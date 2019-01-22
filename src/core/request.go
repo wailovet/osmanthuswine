@@ -4,6 +4,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"io/ioutil"
+	"github.com/wailovet/osmanthuswine/src/session"
 )
 
 type Request struct {
@@ -66,4 +67,8 @@ func (r *Request) SyncCookieData(request *http.Request) {
 	for k := range cookie {
 		r.COOKIE[cookie[k].Name] = cookie[k].Value
 	}
+}
+
+func (r *Request) SyncSessionData(request *http.Request) {
+	r.SESSION = session.GetSession(request)
 }

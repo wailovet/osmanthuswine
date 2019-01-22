@@ -45,6 +45,8 @@ func Run() {
 		requestData.SyncHeaderData(request)
 		//COOKIE
 		requestData.SyncCookieData(request)
+		//SESSION
+		requestData.SyncSessionData(request)
 
 		responseHandle := core.Response{ResWriter: writer}
 

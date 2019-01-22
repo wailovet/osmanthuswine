@@ -3,6 +3,7 @@ package core
 import (
 	"net/http"
 	"encoding/json"
+	"github.com/wailovet/osmanthuswine/src/session"
 )
 
 type ResponseData struct {
@@ -57,4 +58,8 @@ func (r *Response) DisplayByData(data interface{}) {
 		r.Display(nil, "JSON返回格式解析异常:"+err.Error(), 500)
 	}
 	r.DisplayByRaw(text)
+}
+
+func (r *Response) SetSession(value map[string]string) {
+	session.SetSession(r.ResWriter, value)
 }
