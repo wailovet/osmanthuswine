@@ -4,7 +4,6 @@ import (
 	"reflect"
 	"strings"
 	"unicode"
-	"github.com/wailovet/osmanthuswine/src/helper"
 )
 
 type RouterManage struct {
@@ -47,7 +46,7 @@ func (rm *RouterManage) getFunName(name string) string {
 	}
 	tmp := strings.Split(name, ".")
 	name = strings.Join(tmp[0:len(tmp)-1], ".")
-	helper.GetInstanceLog().Out(name)
+
 	for i, v := range name {
 		return string(unicode.ToUpper(v)) + name[i+1:]
 	}
