@@ -13,6 +13,7 @@ import (
 	"errors"
 	"log"
 	"github.com/wailovet/osmanthuswine/src/core"
+	"github.com/wailovet/osmanthuswine/src/helper"
 )
 
 func Run() {
@@ -60,7 +61,7 @@ func Run() {
 			path = "/index.html"
 		}
 
-		println("静态文件:", "./html"+path)
+		helper.GetInstanceLog().Out("静态文件:", "./html"+path)
 		data, err := ioutil.ReadFile("./html" + path)
 		if err == nil {
 			writer.Write([]byte(data))
@@ -69,8 +70,7 @@ func Run() {
 			writer.Write([]byte(""))
 		}
 	})
-
-	log.Println("开始监听:", cc.Host+":"+cc.Port)
+	helper.GetInstanceLog().Out("开始监听:", cc.Host+":"+cc.Port)
 	http.ListenAndServe(cc.Host+":"+cc.Port, r)
 }
 
