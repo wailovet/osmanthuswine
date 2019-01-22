@@ -59,6 +59,7 @@ func Run() {
 		if path == "/" {
 			path = "/index.html"
 		}
+
 		println("静态文件:", "./html"+path)
 		data, err := ioutil.ReadFile("./html" + path)
 		if err == nil {
