@@ -27,7 +27,7 @@ func New(r *http.Request, w http.ResponseWriter) *Session {
 func (session *Session) GetSession() map[string]string {
 	value := make(map[string]string)
 	if cookie, err := session.r.Cookie("osmseccidhas"); err == nil {
-		session.secureCookie.Decode("osmseccidhas", cookie.Value, value)
+		session.secureCookie.Decode("osmseccidhas", cookie.Value,&value)
 	}else {
 		helper.GetInstanceLog().Out(err.Error())
 	}
