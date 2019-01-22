@@ -40,8 +40,6 @@ func (session *Session) SetSession(value map[string]string) {
 			Name:     "osm-sec-cid-has",
 			Value:    encoded,
 			Path:     "/",
-			Secure:   true,
-			HttpOnly: true,
 		}
 		http.SetCookie(session.w, cookie)
 	}
