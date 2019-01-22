@@ -14,6 +14,7 @@ import (
 	"log"
 	"github.com/wailovet/osmanthuswine/src/core"
 	"github.com/wailovet/osmanthuswine/src/helper"
+	"github.com/wailovet/osmanthuswine/src/session"
 )
 
 func Run() {
@@ -37,6 +38,8 @@ func Run() {
 
 		requestData := core.Request{}
 
+		sessionMan := session.New(request, &writer)
+
 		//GET
 		requestData.SyncGetData(request)
 		//POST
@@ -46,7 +49,7 @@ func Run() {
 		//COOKIE
 		requestData.SyncCookieData(request)
 		//SESSION
-		requestData.SyncSessionData(request)
+		requestData.SyncSessionData(sessionMan)
 
 		responseHandle := core.Response{ResWriter: writer}
 

@@ -14,6 +14,7 @@ type ResponseData struct {
 
 type Response struct {
 	ResWriter http.ResponseWriter
+	session   session.Session
 }
 
 func (r *Response) DisplayByString(data string) {
@@ -61,5 +62,5 @@ func (r *Response) DisplayByData(data interface{}) {
 }
 
 func (r *Response) SetSession(value map[string]string) {
-	session.SetSession(r.ResWriter, value)
+	r.session.SetSession(value)
 }

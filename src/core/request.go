@@ -69,6 +69,6 @@ func (r *Request) SyncCookieData(request *http.Request) {
 	}
 }
 
-func (r *Request) SyncSessionData(request *http.Request) {
-	r.SESSION = session.GetSession(request)
+func (r *Request) SyncSessionData(session *session.Session) {
+	r.SESSION = session.GetSession()
 }
