@@ -47,6 +47,9 @@ func Run() {
 
 		responseHandle := core.Response{ResWriter: writer}
 
+		if cc.CrossDomain != "" {
+			responseHandle.ResWriter.Header().Set("Access-Control-Allow-Origin", cc.CrossDomain)
+		}
 		ok := core.GetInstanceRouterManage().RouterSend(request.URL.Path, requestData, responseHandle)
 		if ok == nil {
 			writer.WriteHeader(404)
