@@ -7,8 +7,7 @@
 ```
 app
  |--index
-      |--controller
-             |--index.go
+      |--index.go
 config
  |--main.json
 html
