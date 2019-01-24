@@ -15,6 +15,7 @@ type Db struct {
 	GormDB     *gorm.DB
 }
 
+var ThreadsConnectedNum  = 0
 func GetThreadsConnectedNum() int {
 
 	cc := GetInstanceConfig()
