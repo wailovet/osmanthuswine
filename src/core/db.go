@@ -16,8 +16,7 @@ func CreateDbObject() (Db, error) {
 	mysqlConfig.User = config.Db.User
 	mysqlConfig.DBName = config.Db.Name
 	mysqlConfig.Passwd = config.Db.Password
-	mysqlConfig.Params = make(map[string]string)
-	mysqlConfig.Params["charset"] = config.Db.Charset
+	mysqlConfig.Params = config.Db.Params
 	mysqlConfig.Net = "tcp"
 	mysqlConfig.Addr = config.Db.Host + ":" + config.Db.Port
 	//helper.GetInstanceLog().Out(mysqlConfig.FormatDSN())
