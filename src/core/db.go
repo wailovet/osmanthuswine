@@ -5,11 +5,43 @@ import (
 	"github.com/go-xorm/xorm"
 	"github.com/jinzhu/gorm"
 	"github.com/go-errors/errors"
+	"database/sql"
+	"github.com/wailovet/osmanthuswine/src/helper"
+	"strconv"
 )
 
 type Db struct {
 	XormEngine *xorm.Engine
 	GormDB     *gorm.DB
+}
+
+var threadsConnectedNumConn *sql.DB
+
+func GetThreadsConnectedNum() int {
+	if threadsConnectedNumConn == nil {
+		cc := GetInstanceConfig()
+		mysqlConfig := mysql.NewConfig()
+		mysqlConfig.User = cc.Db.User
+		mysqlConfig.DBName = cc.Db.Name
+		mysqlConfig.Passwd = cc.Db.Password
+		mysqlConfig.Params = cc.Db.Params
+		mysqlConfig.Net = "tcp"
+		mysqlConfig.Addr = cc.Db.Host + ":" + cc.Db.Port
+		threadsConnectedNumConn, _ = sql.Open("mysql", mysqlConfig.FormatDSN())
+	}
+
+	rows, _ := threadsConnectedNumConn.Query("show status like 'Threads_connected';")
+	cols, _ := rows.Columns()
+	buff := make([]interface{}, len(cols)) // 临时slice，用来通过类型检查
+	data := make([]string, len(cols))      // 真正存放数据的slice
+	for i, _ := range buff {
+		buff[i] = &data[i] // 把两个slice关联起来
+	}
+	for rows.Next() {
+		rows.Scan(buff...)
+	}
+	ii, _ := strconv.Atoi(data[1])
+	return ii
 }
 
 const DbTypeXorm = 0
@@ -25,7 +57,7 @@ func CreateDbObject(dbtype int) (*Db, error) {
 	mysqlConfig.Net = "tcp"
 	mysqlConfig.Addr = config.Db.Host + ":" + config.Db.Port
 
-	//helper.GetInstanceLog().Out(mysqlConfig.FormatDSN())
+	helper.GetInstanceLog().Out("连接数:", GetThreadsConnectedNum())
 
 	if dbtype == DbTypeXorm {
 		engine, err := xorm.NewEngine("mysql", mysqlConfig.FormatDSN())

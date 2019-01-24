@@ -24,6 +24,7 @@ func Run() {
 
 	cc := core.GetInstanceConfig()
 
+
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
