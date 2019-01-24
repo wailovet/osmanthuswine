@@ -23,12 +23,6 @@ func Run() {
 	log.Println("工作目录:", path)
 
 	cc := core.GetInstanceConfig()
-	go func() {
-		for   {
-			core.ThreadsConnectedNum = core.GetThreadsConnectedNum()
-		}
-	}()
-
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
