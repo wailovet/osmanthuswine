@@ -59,7 +59,7 @@ func CreateDbObject(dbtype int) (*Db, error) {
 	mysqlConfig.Net = "tcp"
 	mysqlConfig.Addr = config.Db.Host + ":" + config.Db.Port
 
-	for GetThreadsConnectedNum() > config.Db.MaxOpenConn {
+	for ThreadsConnectedNum > config.Db.MaxOpenConn {
 		time.Sleep(time.Second)
 	}
 
