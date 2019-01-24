@@ -15,25 +15,29 @@ type Db struct {
 	GormDB     *gorm.DB
 }
 
-var ThreadsConnectedNum  = 0
-func GetThreadsConnectedNum() int {
+var threadsConnectedNumConn *sql.DB
 
-	cc := GetInstanceConfig()
-	mysqlConfig := mysql.NewConfig()
-	mysqlConfig.User = cc.Db.User
-	mysqlConfig.DBName = cc.Db.Name
-	mysqlConfig.Passwd = cc.Db.Password
-	mysqlConfig.Params = cc.Db.Params
-	mysqlConfig.Net = "tcp"
-	mysqlConfig.Addr = cc.Db.Host + ":" + cc.Db.Port
-	threadsConnectedNumConn, _ := sql.Open("mysql", mysqlConfig.FormatDSN())
+func GetThreadsConnectedNum() (int, error) {
+	if threadsConnectedNumConn == nil {
+		cc := GetInstanceConfig()
+		mysqlConfig := mysql.NewConfig()
+		mysqlConfig.User = cc.Db.User
+		mysqlConfig.DBName = cc.Db.Name
+		mysqlConfig.Passwd = cc.Db.Password
+		mysqlConfig.Params = cc.Db.Params
+		mysqlConfig.Net = "tcp"
+		mysqlConfig.Addr = cc.Db.Host + ":" + cc.Db.Port
+		threadsConnectedNumConn, _ = sql.Open("mysql", mysqlConfig.FormatDSN())
+	}
 
-	rows, _ := threadsConnectedNumConn.Query("show status like 'Threads_connected';")
-
-	defer  rows.Close()
-	defer  threadsConnectedNumConn.Close()
-
-	cols, _ := rows.Columns()
+	rows, err := threadsConnectedNumConn.Query("show status like 'Threads_connected';")
+	if err != nil {
+		return 0, err
+	}
+	cols, err := rows.Columns()
+	if err != nil {
+		return 0, err
+	}
 	buff := make([]interface{}, len(cols)) // 临时slice，用来通过类型检查
 	data := make([]string, len(cols))      // 真正存放数据的slice
 	for i, _ := range buff {
@@ -43,7 +47,7 @@ func GetThreadsConnectedNum() int {
 		rows.Scan(buff...)
 	}
 	ii, _ := strconv.Atoi(data[1])
-	return ii
+	return ii, nil
 }
 
 const DbTypeXorm = 0
@@ -59,7 +63,15 @@ func CreateDbObject(dbtype int) (*Db, error) {
 	mysqlConfig.Net = "tcp"
 	mysqlConfig.Addr = config.Db.Host + ":" + config.Db.Port
 
-	for ThreadsConnectedNum > config.Db.MaxOpenConn {
+	connNum, err := GetThreadsConnectedNum()
+	if err != nil {
+		return nil, errors.New("not conn num")
+	}
+	for connNum > config.Db.MaxOpenConn {
+		connNum, err = GetThreadsConnectedNum()
+		if err != nil {
+			return nil, errors.New("not conn num")
+		}
 		time.Sleep(time.Second)
 	}
 
