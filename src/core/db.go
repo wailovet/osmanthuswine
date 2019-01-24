@@ -63,18 +63,6 @@ func CreateDbObject(dbtype int) (*Db, error) {
 	mysqlConfig.Net = "tcp"
 	mysqlConfig.Addr = config.Db.Host + ":" + config.Db.Port
 
-	connNum, err := GetThreadsConnectedNum()
-	if err != nil {
-		return nil, errors.New("not conn num")
-	}
-	for connNum > config.Db.MaxOpenConn {
-		connNum, err = GetThreadsConnectedNum()
-		if err != nil {
-			return nil, errors.New("not conn num")
-		}
-		time.Sleep(time.Second)
-	}
-
 	if dbtype == DbTypeXorm {
 		engine, err := xorm.NewEngine("mysql", mysqlConfig.FormatDSN())
 		engine.SetMaxOpenConns(config.Db.MaxOpenConn)
