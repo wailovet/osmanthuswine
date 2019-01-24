@@ -16,9 +16,9 @@ type Config struct {
 	Db struct {
 		Host     string `json:"host"`
 		Port     string `json:"port"`
-		Name     string `json:"name"`
 		User     string `json:"user"`
 		Password string `json:"password"`
+		Name     string `json:"name"`
 		Charset  string `json:"charset"`
 	} `json:"db"`
 }
@@ -36,7 +36,29 @@ func SetConfig(c *Config) {
 
 func GetInstanceConfig() *Config {
 	if instanceConfig == nil {
-		instanceConfig = &Config{} // not thread safe
+		instanceConfig = &Config{
+			Host:          "localhost",
+			Port:          "8808",
+			ApiRouter:     "/Api/*",
+			CrossDomain:   "*",
+			PostMaxMemory: 1024 * 1024 * 10,
+			Db: struct {
+				Host     string `json:"host"`
+				Port     string `json:"port"`
+				User     string `json:"user"`
+				Password string `json:"password"`
+				Name     string `json:"name"`
+				Charset  string `json:"charset"`
+			}{
+				Host:     "localhost",
+				Port:     "3306",
+				User:     "root",
+				Password: "root",
+				Name:     "test",
+				Charset:  "utf-8",
+			},
+		}
+
 		instanceConfig.ReadConfig(configFile)
 	}
 	return instanceConfig
@@ -53,20 +75,4 @@ func (c *Config) ReadConfig(file string) {
 		helper.GetInstanceLog().Out("配置文件错误,启动失败:", err.Error())
 		os.Exit(0)
 	}
-	if c.PostMaxMemory <= 0 {
-		c.PostMaxMemory = 1024 * 1024 * 10
-	}
-	if c.Host == "" {
-		c.Host = "127.0.0.1"
-	}
-	if c.Port == "" {
-		c.Port = "8808"
-	}
-	if c.ApiRouter == "" {
-		c.ApiRouter = "/Api/*"
-	}
-	if c.CrossDomain == "" {
-		c.CrossDomain = "*"
-	}
-
 }
