@@ -60,7 +60,9 @@ func (e RouterError) Error() string {
 
 func (rm *RouterManage) RouterSend(urlPath string, request Request, response Response) (error) {
 	tmp := strings.Split(urlPath, ".")
-	urlPath = strings.Join(tmp[0:len(tmp)-1], ".")
+	if len(tmp) > 1 {
+		urlPath = strings.Join(tmp[0:len(tmp)-1], ".")
+	}
 
 	sar := strings.Split(urlPath, "/")
 	for ; len(sar) < 5; {

@@ -13,6 +13,14 @@ type Config struct {
 	CrossDomain   string `json:"cross_domain"`
 	ApiRouter     string `json:"api_router"`
 	PostMaxMemory int64  `json:"post_max_memory"`
+	Db struct {
+		Host     string `json:"host"`
+		Port     string `json:"port"`
+		Name     string `json:"name"`
+		User     string `json:"user"`
+		Password string `json:"password"`
+		Charset  string `json:"charset"`
+	} `json:"db"`
 }
 
 func (c *Config) ReadConfig(file string) {
