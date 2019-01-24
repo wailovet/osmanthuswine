@@ -6,8 +6,8 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/go-errors/errors"
 	"database/sql"
-	"github.com/wailovet/osmanthuswine/src/helper"
 	"strconv"
+	"time"
 )
 
 type Db struct {
@@ -57,7 +57,9 @@ func CreateDbObject(dbtype int) (*Db, error) {
 	mysqlConfig.Net = "tcp"
 	mysqlConfig.Addr = config.Db.Host + ":" + config.Db.Port
 
-	helper.GetInstanceLog().Out("连接数:", GetThreadsConnectedNum())
+	for GetThreadsConnectedNum() > config.Db.MaxOpenConn {
+		time.Sleep(time.Second)
+	}
 
 	if dbtype == DbTypeXorm {
 		engine, err := xorm.NewEngine("mysql", mysqlConfig.FormatDSN())
