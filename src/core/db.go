@@ -8,7 +8,7 @@ import (
 )
 
 type Db struct {
-	gorm.DB
+	GormDB *gorm.DB
 }
 
 func CreateDbObject() (Db, error) {
@@ -21,10 +21,9 @@ func CreateDbObject() (Db, error) {
 	mysqlConfig.Params = make(map[string]string)
 	mysqlConfig.Params["charset"] = config.Db.Charset
 	mysqlConfig.Addr = config.Db.Host + ":" + config.Db.Port
-
 	db, err := gorm.Open("mysql", mysqlConfig.FormatDSN())
-	var sdb interface{}
-	sdb = *db
-	ndb := sdb.(Db)
+	ndb := Db{
+		GormDB: db,
+	}
 	return ndb, err
 }
