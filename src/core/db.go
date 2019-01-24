@@ -1,14 +1,12 @@
 package core
 
 import (
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-sql-driver/mysql"
+	"github.com/go-xorm/xorm"
 )
 
 type Db struct {
-	GormDB *gorm.DB
+	XormEngine *xorm.Engine
 }
 
 func CreateDbObject() (Db, error) {
@@ -23,9 +21,9 @@ func CreateDbObject() (Db, error) {
 	mysqlConfig.Net = "tcp"
 	mysqlConfig.Addr = config.Db.Host + ":" + config.Db.Port
 	//helper.GetInstanceLog().Out(mysqlConfig.FormatDSN())
-	db, err := gorm.Open("mysql", mysqlConfig.FormatDSN())
+	engine, err := xorm.NewEngine("mysql", mysqlConfig.FormatDSN())
 	ndb := Db{
-		GormDB: db,
+		XormEngine: engine,
 	}
 	return ndb, err
 }
