@@ -4,19 +4,24 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-sql-driver/mysql"
 )
 
 type Db struct {
 	gorm.DB
 }
 
-var dbName = "test"
-var dbPassword = "root"
-var dbUser = "root"
-var dbCharset = "utf8"
-
 func CreateDbObject() (Db, error) {
-	db, err := gorm.Open("mysql", dbUser+":"+dbPassword+"@/"+dbName+"?charset="+dbCharset+"&parseTime=True&loc=Local")
+
+	config := GetInstanceConfig()
+	mysqlConfig := mysql.NewConfig()
+	mysqlConfig.User = config.Db.User
+	mysqlConfig.DBName = config.Db.Name
+	mysqlConfig.Passwd = config.Db.Password
+	mysqlConfig.Params["charset"] = config.Db.Charset
+	mysqlConfig.Addr = config.Db.Host + ":" + config.Db.Port
+
+	db, err := gorm.Open("mysql", mysqlConfig.FormatDSN())
 	var sdb interface{}
 	sdb = *db
 	ndb := sdb.(Db)

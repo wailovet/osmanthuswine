@@ -22,8 +22,7 @@ func Run() {
 	os.Chdir(path)
 	log.Println("工作目录:", path)
 
-	cc := core.Config{}
-	cc.ReadConfig("./config/main.json")
+	cc := core.GetInstanceConfig()
 
 	r := chi.NewRouter()
 
