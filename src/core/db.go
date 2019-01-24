@@ -15,22 +15,23 @@ type Db struct {
 	GormDB     *gorm.DB
 }
 
-var threadsConnectedNumConn *sql.DB
-
 func GetThreadsConnectedNum() int {
-	if threadsConnectedNumConn == nil {
-		cc := GetInstanceConfig()
-		mysqlConfig := mysql.NewConfig()
-		mysqlConfig.User = cc.Db.User
-		mysqlConfig.DBName = cc.Db.Name
-		mysqlConfig.Passwd = cc.Db.Password
-		mysqlConfig.Params = cc.Db.Params
-		mysqlConfig.Net = "tcp"
-		mysqlConfig.Addr = cc.Db.Host + ":" + cc.Db.Port
-		threadsConnectedNumConn, _ = sql.Open("mysql", mysqlConfig.FormatDSN())
-	}
+
+	cc := GetInstanceConfig()
+	mysqlConfig := mysql.NewConfig()
+	mysqlConfig.User = cc.Db.User
+	mysqlConfig.DBName = cc.Db.Name
+	mysqlConfig.Passwd = cc.Db.Password
+	mysqlConfig.Params = cc.Db.Params
+	mysqlConfig.Net = "tcp"
+	mysqlConfig.Addr = cc.Db.Host + ":" + cc.Db.Port
+	threadsConnectedNumConn, _ := sql.Open("mysql", mysqlConfig.FormatDSN())
 
 	rows, _ := threadsConnectedNumConn.Query("show status like 'Threads_connected';")
+
+	defer  rows.Close()
+	defer  threadsConnectedNumConn.Close()
+
 	cols, _ := rows.Columns()
 	buff := make([]interface{}, len(cols)) // 临时slice，用来通过类型检查
 	data := make([]string, len(cols))      // 真正存放数据的slice
