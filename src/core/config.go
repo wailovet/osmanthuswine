@@ -24,7 +24,7 @@ type Config struct {
 }
 
 var instanceConfig *Config
-var configFile = "./config/main.json"
+var configFile = "./config.json"
 
 func SetConfigFile(c string) {
 	configFile = c
