@@ -29,6 +29,7 @@ func CreateDbObject(dbtype int) (*Db, error) {
 
 	if dbtype == DbTypeXorm {
 		engine, err := xorm.NewEngine("mysql", mysqlConfig.FormatDSN())
+		engine.SetMaxOpenConns(config.Db.MaxOpenConn)
 		ndb := Db{
 			XormEngine: engine,
 		}
@@ -36,6 +37,7 @@ func CreateDbObject(dbtype int) (*Db, error) {
 	}
 	if dbtype == DbTypeGorm {
 		db, err := gorm.Open("mysql", mysqlConfig.FormatDSN())
+		db.DB().SetMaxOpenConns(config.Db.MaxOpenConn)
 		ndb := Db{
 			GormDB: db,
 		}

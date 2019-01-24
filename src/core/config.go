@@ -14,12 +14,13 @@ type Config struct {
 	ApiRouter     string `json:"api_router"`
 	PostMaxMemory int64  `json:"post_max_memory"`
 	Db struct {
-		Host     string            `json:"host"`
-		Port     string            `json:"port"`
-		User     string            `json:"user"`
-		Password string            `json:"password"`
-		Name     string            `json:"name"`
-		Params   map[string]string `json:"params"`
+		Host        string            `json:"host"`
+		Port        string            `json:"port"`
+		User        string            `json:"user"`
+		Password    string            `json:"password"`
+		Name        string            `json:"name"`
+		MaxOpenConn int               `json:"max_open_conn"`
+		Params      map[string]string `json:"params"`
 	} `json:"db"`
 }
 
@@ -43,20 +44,22 @@ func GetInstanceConfig() *Config {
 			CrossDomain:   "*",
 			PostMaxMemory: 1024 * 1024 * 10,
 			Db: struct {
-				Host     string            `json:"host"`
-				Port     string            `json:"port"`
-				User     string            `json:"user"`
-				Password string            `json:"password"`
-				Name     string            `json:"name"`
-				Params   map[string]string `json:"params"`
+				Host        string            `json:"host"`
+				Port        string            `json:"port"`
+				User        string            `json:"user"`
+				Password    string            `json:"password"`
+				Name        string            `json:"name"`
+				MaxOpenConn int               `json:"max_open_conn"`
+				Params      map[string]string `json:"params"`
 			}{
-				Host:     "localhost",
-				Port:     "3306",
-				User:     "root",
-				Password: "root",
-				Name:     "test",
+				Host:        "localhost",
+				Port:        "3306",
+				User:        "root",
+				Password:    "root",
+				Name:        "test",
+				MaxOpenConn: 500,
 				Params: map[string]string{
-					"charset": "utf8mb4",
+					"charset":   "utf8mb4",
 					"parseTime": "true",
 				},
 			},
