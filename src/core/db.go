@@ -49,7 +49,6 @@ func GetThreadsConnectedNum() (int, error) {
 	return ii, nil
 }
 
-
 var instanceDb *Db
 
 func CreateDbObject() (*Db, error) {
@@ -71,5 +70,5 @@ func CreateDbObject() (*Db, error) {
 		return instanceDb, err
 	}
 
-	return nil, errors.New("error orm type")
+	return instanceDb, nil
 }
