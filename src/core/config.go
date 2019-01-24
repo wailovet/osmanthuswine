@@ -57,6 +57,7 @@ func GetInstanceConfig() *Config {
 				Name:     "test",
 				Params: map[string]string{
 					"charset": "utf8mb4",
+					"parseTime": "true",
 				},
 			},
 		}
