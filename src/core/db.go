@@ -7,7 +7,6 @@ import (
 	"github.com/go-errors/errors"
 	"database/sql"
 	"strconv"
-	"time"
 )
 
 type Db struct {
