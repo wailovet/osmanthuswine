@@ -24,6 +24,11 @@ type Config struct {
 }
 
 var instanceConfig *Config
+var configFile = "./config/main.json"
+
+func SetConfigFile(c string) {
+	configFile = c
+}
 
 func SetConfig(c *Config) {
 	instanceConfig = c
@@ -32,7 +37,7 @@ func SetConfig(c *Config) {
 func GetInstanceConfig() *Config {
 	if instanceConfig == nil {
 		instanceConfig = &Config{} // not thread safe
-		instanceConfig.ReadConfig("./config/main.json")
+		instanceConfig.ReadConfig(configFile)
 	}
 	return instanceConfig
 }
