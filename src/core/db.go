@@ -15,8 +15,10 @@ var dbPassword = "root"
 var dbUser = "root"
 var dbCharset = "utf8"
 
-func CreateDbObject() (*gorm.DB, error) {
+func CreateDbObject() (Db, error) {
 	db, err := gorm.Open("mysql", dbUser+":"+dbPassword+"@/"+dbName+"?charset="+dbCharset+"&parseTime=True&loc=Local")
-
-	return db, err
+	var sdb interface{}
+	sdb = *db
+	ndb := sdb.(Db)
+	return ndb, err
 }
