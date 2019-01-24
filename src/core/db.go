@@ -5,7 +5,6 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-sql-driver/mysql"
-	"github.com/wailovet/osmanthuswine/src/helper"
 )
 
 type Db struct {
@@ -23,7 +22,7 @@ func CreateDbObject() (Db, error) {
 	mysqlConfig.Params["charset"] = config.Db.Charset
 	mysqlConfig.Net = "tcp"
 	mysqlConfig.Addr = config.Db.Host + ":" + config.Db.Port
-	helper.GetInstanceLog().Out(mysqlConfig.FormatDSN())
+	//helper.GetInstanceLog().Out(mysqlConfig.FormatDSN())
 	db, err := gorm.Open("mysql", mysqlConfig.FormatDSN())
 	ndb := Db{
 		GormDB: db,
