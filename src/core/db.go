@@ -4,7 +4,6 @@ import (
 	"github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 	"github.com/jinzhu/gorm"
-	"github.com/go-errors/errors"
 	"database/sql"
 	"strconv"
 )
