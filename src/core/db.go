@@ -49,12 +49,10 @@ func GetThreadsConnectedNum() (int, error) {
 	return ii, nil
 }
 
-const DbTypeXorm = 0
-const DbTypeGorm = 1
 
 var instanceDb *Db
 
-func CreateDbObject(dbtype int) (*Db, error) {
+func CreateDbObject() (*Db, error) {
 	if instanceDb == nil {
 		config := GetInstanceConfig()
 		mysqlConfig := mysql.NewConfig()
@@ -64,22 +62,13 @@ func CreateDbObject(dbtype int) (*Db, error) {
 		mysqlConfig.Params = config.Db.Params
 		mysqlConfig.Net = "tcp"
 		mysqlConfig.Addr = config.Db.Host + ":" + config.Db.Port
-		if dbtype == DbTypeXorm {
-			engine, err := xorm.NewEngine("mysql", mysqlConfig.FormatDSN())
-			engine.SetMaxOpenConns(config.Db.MaxOpenConn)
-			instanceDb = &Db{
-				XormEngine: engine,
-			}
-			return instanceDb, err
+
+		db, err := gorm.Open("mysql", mysqlConfig.FormatDSN())
+		db.DB().SetMaxOpenConns(config.Db.MaxOpenConn)
+		instanceDb = &Db{
+			GormDB: db,
 		}
-		if dbtype == DbTypeGorm {
-			db, err := gorm.Open("mysql", mysqlConfig.FormatDSN())
-			db.DB().SetMaxOpenConns(config.Db.MaxOpenConn)
-			instanceDb = &Db{
-				GormDB: db,
-			}
-			return instanceDb, err
-		}
+		return instanceDb, err
 	}
 
 	return nil, errors.New("error orm type")
