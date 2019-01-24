@@ -23,6 +23,20 @@ type Config struct {
 	} `json:"db"`
 }
 
+var instanceConfig *Config
+
+func SetConfig(c *Config) {
+	instanceConfig = c
+}
+
+func GetInstanceConfig() *Config {
+	if instanceConfig == nil {
+		instanceConfig = &Config{} // not thread safe
+		instanceConfig.ReadConfig("./config/main.json")
+	}
+	return instanceConfig
+}
+
 func (c *Config) ReadConfig(file string) {
 	configText, err := ioutil.ReadFile(file)
 	if err != nil {
