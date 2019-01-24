@@ -17,5 +17,6 @@ var dbCharset = "utf8"
 
 func CreateDbObject() (*gorm.DB, error) {
 	db, err := gorm.Open("mysql", dbUser+":"+dbPassword+"@/"+dbName+"?charset="+dbCharset+"&parseTime=True&loc=Local")
+
 	return db, err
 }
