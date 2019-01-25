@@ -63,6 +63,7 @@ func CreateDbObject() (*Db, error) {
 
 		db, err := gorm.Open("mysql", mysqlConfig.FormatDSN())
 		db.DB().SetMaxOpenConns(config.Db.MaxOpenConn)
+		db.SingularTable(true)
 		instanceDb = &Db{
 			GormDB: db,
 		}
