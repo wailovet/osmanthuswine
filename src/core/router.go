@@ -25,13 +25,13 @@ func (rm *RouterManage) Registered(i interface{}) {
 	GetInstanceRouterManage().RegisteredData[t.String()] = reflect.ValueOf(i)
 }
 
-func (rm *RouterManage) getModuleName(name string) string {
+func (rm *RouterManage) GetModuleName(name string) string {
 	if name == "" {
 		return "index"
 	}
 	return strings.ToLower(name)
 }
-func (rm *RouterManage) getControllerName(name string) string {
+func (rm *RouterManage) GetControllerName(name string) string {
 	if name == "" {
 		return "Index"
 	}
@@ -40,7 +40,7 @@ func (rm *RouterManage) getControllerName(name string) string {
 	}
 	return "Index"
 }
-func (rm *RouterManage) getFunName(name string) string {
+func (rm *RouterManage) GetFunName(name string) string {
 	if name == "" {
 		return "Index"
 	}
@@ -69,9 +69,9 @@ func (rm *RouterManage) RouterSend(urlPath string, request Request, response Res
 		sar = append(sar, "")
 	}
 	//过滤非 /Api开头的
-	module := rm.getModuleName(sar[2])
-	controller := rm.getControllerName(sar[3])
-	fun := rm.getFunName(sar[4])
+	module := rm.GetModuleName(sar[2])
+	controller := rm.GetControllerName(sar[3])
+	fun := rm.GetFunName(sar[4])
 
 	ctr := "*" + module + "." + controller
 
