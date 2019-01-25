@@ -51,6 +51,7 @@ func Run() {
 
 		responseHandle := core.Response{ResWriter: writer, Session: sessionMan}
 
+		responseHandle.ResWriter.Header().Set("Content-Type", "Content-Type:application/json")
 		if cc.CrossDomain != "" {
 			responseHandle.ResWriter.Header().Set("Access-Control-Allow-Origin", cc.CrossDomain)
 		}
