@@ -29,8 +29,10 @@ func (r *Request) SyncGetData(request *http.Request) {
 		if err != nil {
 			helper.GetInstanceLog().Out(err.Error())
 			r.GET[k] = str
+			r.REQUEST[k] = str
 		}else{
 			r.GET[k] = tmp
+			r.REQUEST[k] = tmp
 		}
 	}
 }
@@ -47,8 +49,10 @@ func (r *Request) SyncPostData(request *http.Request, mem int64) {
 		if err != nil {
 			helper.GetInstanceLog().Out(err.Error())
 			r.POST[k] = str
+			r.REQUEST[k] = str
 		}else{
 			r.POST[k] = tmp
+			r.REQUEST[k] = tmp
 		}
 	}
 
@@ -58,6 +62,7 @@ func (r *Request) SyncPostData(request *http.Request, mem int64) {
 		for k := range mf {
 			if len(mf[k]) > 0 {
 				r.POST[k] = mf[k][0]
+				r.REQUEST[k] = mf[k][0]
 			}
 		}
 	}

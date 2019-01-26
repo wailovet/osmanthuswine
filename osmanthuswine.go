@@ -38,6 +38,7 @@ func Run() {
 
 		sessionMan := session.New(request, writer)
 
+		requestData.REQUEST = make(map[string]string)
 		//GET
 		requestData.SyncGetData(request)
 		//POST
