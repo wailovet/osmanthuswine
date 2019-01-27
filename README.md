@@ -28,7 +28,7 @@ func main() {
 ```
 
 
->/app/index/controller/index.go文件
+>/app/index/index.go文件
 ```
 package index
 
@@ -53,4 +53,51 @@ func (n *Index) Index(req core.Request, res core.Response) {
   "cross_domain": "*",
   "post_max_memory": 1024000
 }
+```
+
+### core.Responsea 支持方法
++ DisplayByData(data interface{})
+```
+{
+    "code":0,
+    "data":data,
+    "msg":""
+}
+```
+- - -
++ DisplayBySuccess(msg string)
+```
+{
+    "code":0,
+    "data":nill,
+    "msg":msg
+}
+```
+- - -
++ DisplayByError(msg string, code int)
+```
+{
+    "code":code,
+    "data":nill,
+    "msg":msg
+}
+```
+- - -
++ Display(data interface{}, msg string, code int)
+```
+{
+    "code":code,
+    "data":data,
+    "msg":msg
+}
+```
+- - -
++ DisplayByString(data string)
+```
+data //直接输出data以string形式
+```
+- - -
++ DisplayByRaw(data []byte)
+```
+data //直接输出data以[]byte形式,可用于直接输出二进制文件
 ```
