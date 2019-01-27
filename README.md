@@ -85,7 +85,7 @@ func (n *Index) Index(req core.Request, res core.Response) {
 ## core.Responsea 使用说明
 ### 输出显示
 > 如果输出时不处于函数结尾,记得return
-+ DisplayByData(data interface{})
++ res.DisplayByData(data interface{})
 ```
 {
     "code":0,
@@ -94,7 +94,7 @@ func (n *Index) Index(req core.Request, res core.Response) {
 }
 ```
 - - -
-+ DisplayBySuccess(msg string)
++ res.DisplayBySuccess(msg string)
 ```
 {
     "code":0,
@@ -103,7 +103,7 @@ func (n *Index) Index(req core.Request, res core.Response) {
 }
 ```
 - - -
-+ DisplayByError(msg string, code int)
++ res.DisplayByError(msg string, code int)
 ```
 {
     "code":code,
@@ -112,7 +112,7 @@ func (n *Index) Index(req core.Request, res core.Response) {
 }
 ```
 - - -
-+ Display(data interface{}, msg string, code int)
++ res.Display(data interface{}, msg string, code int)
 ```
 {
     "code":code,
@@ -121,21 +121,21 @@ func (n *Index) Index(req core.Request, res core.Response) {
 }
 ```
 - - -
-+ DisplayByString(data string)
++ res.DisplayByString(data string)
 ```
 data //直接输出data以string形式
 ```
 - - -
-+ DisplayByRaw(data []byte)
++ res.DisplayByRaw(data []byte)
 ```
 data //直接输出data以[]byte形式,可用于直接输出二进制文件
 ```
 ### session操作
 > 目前session实现基于securecookie,以加密形式储存与cookie中,注意不要存放大量数据,以免超过cookie的最大储存值
-+ SetSession(name string, value string) //设置session
-+ DeleteSession(name string) //删除session
-+ ClearSession() //清空session
++ res.SetSession(name string, value string) //设置session
++ res.DeleteSession(name string) //删除session
++ res.ClearSession() //清空session
 
 ### cookie操作
 > 尽量以session的形式操作
-+ SetCookie(name string, value string)
++ res.SetCookie(name string, value string)
