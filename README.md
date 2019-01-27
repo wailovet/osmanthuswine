@@ -72,7 +72,7 @@ func (n *Index) Index(req core.Request, res core.Response) {
 ```
 {
     "code":0,
-    "data":nill,
+    "data":null,
     "msg":msg
 }
 ```
@@ -81,7 +81,7 @@ func (n *Index) Index(req core.Request, res core.Response) {
 ```
 {
     "code":code,
-    "data":nll,
+    "data":null,
     "msg":msg
 }
 ```
