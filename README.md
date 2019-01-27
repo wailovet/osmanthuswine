@@ -65,11 +65,24 @@ func (n *Index) Index(req core.Request, res core.Response) {
 }
 
 ```
-## 输入参数
-#### 
+## core.Request 使用说明
+### 输入参数 
++ req.GET["参数"] //类型:map[string]string
++ req.POST["参数"] //类型:map[string]string
++ req.REQUEST["参数"] //类型:map[string]string , 为GET以及POST的合并值,当出现值冲突时GET参数会被覆盖
+### session与cookie获取
++ req.SESSION["参数"] //类型:map[string]string
++ req.COOKIE["参数"] //类型:map[string]string
+### header信息获取
++ req.HEADER["参数"] //类型:map[string]string
+### 该取值一般以POST-RAW形式传入原始数据,有可能
++ req.BODY //类型:string
+### 获取上传的文件,比较少用到,具体用法懒得写
++ req.FILES //类型:map[string][]*multipart.FileHeader
 
 
-## core.Responsea 支持方法
+
+## core.Responsea 使用说明
 ### 输出显示
 > 如果输出时不处于函数结尾,记得return
 + DisplayByData(data interface{})
