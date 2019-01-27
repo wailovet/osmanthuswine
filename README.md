@@ -43,6 +43,7 @@ config.json
 package main
 
 import (
+	"./app/index"
 	"github.com/wailovet/osmanthuswine"
 	"github.com/wailovet/osmanthuswine/src/core"
 )
