@@ -18,6 +18,7 @@ main.go
 # 开始
 #### 创建以上目录结构
 > /main.go文件
+
 ```
 func main() {
 	//注册index控制器
@@ -29,6 +30,7 @@ func main() {
 
 
 >/app/index/index.go文件
+
 ```
 package index
 
@@ -46,6 +48,7 @@ func (n *Index) Index(req core.Request, res core.Response) {
 ```
 
 >/config/main.json
+
 ```json
 {
   "port": "8808",
@@ -78,7 +81,7 @@ func (n *Index) Index(req core.Request, res core.Response) {
 ```
 {
     "code":code,
-    "data":nill,
+    "data":nll,
     "msg":msg
 }
 ```
