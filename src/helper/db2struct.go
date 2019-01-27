@@ -20,7 +20,7 @@ func GetStructByDb(tableName string, packageName string, structName string) (str
 	}
 
 	// Generate struct string based on columnDataTypes
-	struc, err := db2struct.Generate(*columnDataTypes, tableName, structName, packageName, false, true, true)
+	struc, err := db2struct.Generate(*columnDataTypes, tableName, structName, packageName, true, true, true)
 
 	if err != nil {
 		return "", errors.New("Error in creating struct from json: " + err.Error())
