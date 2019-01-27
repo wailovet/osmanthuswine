@@ -20,6 +20,13 @@ main.go
 + /main.go文件
 
 ```
+package main
+
+import (
+	"github.com/wailovet/osmanthuswine"
+	"github.com/wailovet/osmanthuswine/src/core"
+)
+
 func main() {
 	//注册index控制器
 	core.GetInstanceRouterManage().Registered(&index.Index{})
