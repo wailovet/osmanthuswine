@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"github.com/wailovet/osmanthuswine/src/session"
 	"net/url"
-	"github.com/wailovet/osmanthuswine/src/helper"
 	"log"
 )
 
