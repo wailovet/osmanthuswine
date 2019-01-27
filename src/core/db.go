@@ -25,6 +25,9 @@ func CreateDbObject() (*Db, error) {
 		mysqlConfig.Addr = config.Db.Host + ":" + config.Db.Port
 
 		db, err := gorm.Open("mysql", mysqlConfig.FormatDSN())
+		gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
+			return config.Db.Prefix + defaultTableName
+		}
 		db.DB().SetMaxOpenConns(config.Db.MaxOpenConn)
 		db.SingularTable(true)
 		instanceDb = &Db{

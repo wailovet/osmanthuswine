@@ -19,6 +19,7 @@ type Config struct {
 		User        string            `json:"user"`
 		Password    string            `json:"password"`
 		Name        string            `json:"name"`
+		Prefix      string            `json:"prefix"`
 		MaxOpenConn int               `json:"max_open_conn"`
 		Params      map[string]string `json:"params"`
 	} `json:"db"`
@@ -49,6 +50,7 @@ func GetInstanceConfig() *Config {
 				User        string            `json:"user"`
 				Password    string            `json:"password"`
 				Name        string            `json:"name"`
+				Prefix      string            `json:"prefix"`
 				MaxOpenConn int               `json:"max_open_conn"`
 				Params      map[string]string `json:"params"`
 			}{
@@ -57,6 +59,7 @@ func GetInstanceConfig() *Config {
 				User:        "root",
 				Password:    "root",
 				Name:        "test",
+				Prefix:        "",
 				MaxOpenConn: 500,
 				Params: map[string]string{
 					"charset":   "utf8mb4",
