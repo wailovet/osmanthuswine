@@ -131,7 +131,7 @@ data //直接输出data以string形式
 data //直接输出data以[]byte形式,可用于直接输出二进制文件
 ```
 ### session操作
-> 目前session实现基于securecookie,以加密形式储存与cookie中,注意不要存放大量数据,以免超过cookie的最大储存值
+> 目前session实现基于securecookie,以加密形式储存在cookie中,注意不要存放大量数据,以免超过cookie的最大储存值
 + res.SetSession(name string, value string) //设置session
 + res.DeleteSession(name string) //删除session
 + res.ClearSession() //清空session
