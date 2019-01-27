@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 	"encoding/json"
-	"github.com/wailovet/osmanthuswine/src/helper"
+	"log"
 )
 
 type Config struct {
@@ -59,7 +59,7 @@ func GetInstanceConfig() *Config {
 				User:        "root",
 				Password:    "root",
 				Name:        "test",
-				Prefix:        "",
+				Prefix:      "",
 				MaxOpenConn: 500,
 				Params: map[string]string{
 					"charset":   "utf8mb4",
@@ -76,12 +76,12 @@ func GetInstanceConfig() *Config {
 func (c *Config) ReadConfig(file string) {
 	configText, err := ioutil.ReadFile(file)
 	if err != nil {
-		helper.GetInstanceLog().Out("配置文件错误,启动失败:", err.Error())
+		log.Println("配置文件错误,启动失败:", err.Error())
 		os.Exit(0)
 	}
 	err = json.Unmarshal(configText, c)
 	if err != nil {
-		helper.GetInstanceLog().Out("配置文件错误,启动失败:", err.Error())
+		log.Println("配置文件错误,启动失败:", err.Error())
 		os.Exit(0)
 	}
 }

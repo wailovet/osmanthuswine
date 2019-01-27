@@ -7,6 +7,7 @@ import (
 	"github.com/wailovet/osmanthuswine/src/session"
 	"net/url"
 	"github.com/wailovet/osmanthuswine/src/helper"
+	"log"
 )
 
 type Request struct {
@@ -27,7 +28,7 @@ func (r *Request) SyncGetData(request *http.Request) {
 		str := request.URL.Query().Get(k)
 		tmp, err := url.QueryUnescape(str)
 		if err != nil {
-			helper.GetInstanceLog().Out(err.Error())
+			log.Println(err.Error())
 			r.GET[k] = str
 			r.REQUEST[k] = str
 		}else{
@@ -47,7 +48,7 @@ func (r *Request) SyncPostData(request *http.Request, mem int64) {
 		str := request.PostFormValue(k)
 		tmp, err := url.QueryUnescape(str)
 		if err != nil {
-			helper.GetInstanceLog().Out(err.Error())
+			log.Println(err.Error())
 			r.POST[k] = str
 			r.REQUEST[k] = str
 		}else{
