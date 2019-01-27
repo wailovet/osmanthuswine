@@ -1,4 +1,4 @@
-## 内部属用基于go-chi的web框架
+## 内部使用基于go-chi的web框架
 
 # 框架引入
 > go get -u github.com/wailovet/osmanthuswine
