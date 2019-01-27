@@ -17,7 +17,7 @@ main.go
 
 # 开始
 #### 创建以上目录结构
-> /main.go文件
++ /main.go文件
 
 ```
 func main() {
@@ -29,7 +29,7 @@ func main() {
 ```
 
 
->/app/index/index.go文件
++ /app/index/index.go文件
 
 ```
 package index
@@ -47,7 +47,7 @@ func (n *Index) Index(req core.Request, res core.Response) {
 
 ```
 
->/config/main.json
++ /config/main.json
 
 ```json
 {
