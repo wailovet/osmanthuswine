@@ -66,9 +66,13 @@ func (n *Index) Index(req core.Request, res core.Response) {
 }
 
 ```
+## 输入参数
+#### 
 
 
-### core.Responsea 支持方法
+## core.Responsea 支持方法
+### 输出显示
+> 如果输出时不处于函数结尾,记得return
 + DisplayByData(data interface{})
 ```
 {
@@ -114,3 +118,12 @@ data //直接输出data以string形式
 ```
 data //直接输出data以[]byte形式,可用于直接输出二进制文件
 ```
+### session操作
+> 目前session实现基于securecookie,以加密形式储存与cookie中,注意不要存放大量数据,以免超过cookie的最大储存值
++ SetSession(name string, value string) //设置session
++ DeleteSession(name string) //删除session
++ ClearSession() //清空session
+
+### cookie操作
+> 尽量以session的形式操作
++ SetCookie(name string, value string)
