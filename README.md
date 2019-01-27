@@ -17,6 +17,19 @@ main.go
 
 # 开始
 #### 创建以上目录结构
+
+
++ /config.json 配置文件
+
+```json
+{
+  "port": "8808",
+  "host": "0.0.0.0",
+  "cross_domain": "*",
+  "post_max_memory": 1024000
+}
+```
+
 + /main.go文件
 
 ```
@@ -54,16 +67,6 @@ func (n *Index) Index(req core.Request, res core.Response) {
 
 ```
 
-+ /config/main.json
-
-```json
-{
-  "port": "8808",
-  "host": "0.0.0.0",
-  "cross_domain": "*",
-  "post_max_memory": 1024000
-}
-```
 
 ### core.Responsea 支持方法
 + DisplayByData(data interface{})
