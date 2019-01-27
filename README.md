@@ -8,11 +8,10 @@
 app
  |--index
       |--index.go
-config
- |--main.json
 html
  |--静态文件....
 main.go
+config.json
 ```
 
 # 开始
