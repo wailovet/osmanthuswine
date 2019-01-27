@@ -25,7 +25,15 @@ config.json
   "port": "8808",
   "host": "0.0.0.0",
   "cross_domain": "*",
-  "post_max_memory": 1024000
+  "post_max_memory": 1024000,
+  "db": {
+    "host": "",
+    "port": "",
+    "user": "",
+    "password": "",
+    "name": "",
+    "max_open_conn": 500
+  }
 }
 ```
 
