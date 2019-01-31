@@ -23,14 +23,11 @@ func init() {
 	go func() {
 		for ; ; {
 			if instanceRedis != nil {
-				if instanceRedis.Ping().Err() != nil {
-					println(instanceRedis.Ping().Err())
-					config := GetInstanceConfig()
-					instanceRedis = redis.NewClient(&redis.Options{
-						Addr:     config.Redis.Addr,
-						Password: config.Redis.Password, // no password set
-						DB:       config.Redis.Db,       // use default DB
-					})
+				err := instanceRedis.Ping().Err()
+				if err != nil {
+					println(err.Error())
+					instanceRedis.Close()
+					instanceRedis = nil
 				}
 			}
 			time.Sleep(time.Second)

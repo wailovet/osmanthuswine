@@ -4,6 +4,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 	"github.com/jinzhu/gorm"
+	"time"
 )
 
 type Db struct {
@@ -36,4 +37,20 @@ func CreateDbObject() (*Db, error) {
 		return instanceDb, err
 	}
 	return instanceDb, nil
+}
+
+func init() {
+	go func() {
+		for ; ; {
+			if instanceDb != nil {
+				err := instanceDb.GormDB.DB().Ping()
+				if err != nil {
+					println(err.Error())
+					instanceDb.GormDB.Close()
+					instanceDb = nil
+				}
+			}
+			time.Sleep(time.Second)
+		}
+	}()
 }
