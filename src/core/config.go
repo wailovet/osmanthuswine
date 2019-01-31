@@ -32,6 +32,7 @@ type Config struct {
 
 var instanceConfig *Config
 var configFile = "./config.json"
+var privateConfigFile = "./private.json"
 
 func SetConfigFile(c string) {
 	configFile = c
@@ -83,6 +84,7 @@ func GetInstanceConfig() *Config {
 		}
 
 		instanceConfig.ReadConfig(configFile)
+		instanceConfig.ReadConfig(privateConfigFile)
 	}
 	return instanceConfig
 }
