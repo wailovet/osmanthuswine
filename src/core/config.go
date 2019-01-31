@@ -84,7 +84,7 @@ func GetInstanceConfig() *Config {
 		}
 
 		instanceConfig.ReadConfig(configFile)
-		instanceConfig.ReadConfig(privateConfigFile)
+		instanceConfig.ReadPrivateConfig(privateConfigFile)
 	}
 	return instanceConfig
 }
@@ -99,5 +99,17 @@ func (c *Config) ReadConfig(file string) {
 	if err != nil {
 		log.Println("配置文件错误,启动失败:", err.Error())
 		os.Exit(0)
+	}
+}
+
+func (c *Config) ReadPrivateConfig(file string) {
+	configText, err := ioutil.ReadFile(file)
+	if err != nil {
+		log.Println("未加载", privateConfigFile, ":", err.Error())
+		return
+	}
+	err = json.Unmarshal(configText, c)
+	if err != nil {
+		log.Println("未加载", privateConfigFile, ":", err.Error())
 	}
 }
