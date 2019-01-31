@@ -72,9 +72,9 @@ func GetInstanceConfig() *Config {
 				},
 			},
 			Redis: struct {
-				Addr     string
-				Password string
-				Db       int
+				Addr     string `json:"addr"`
+				Password string `json:"password"`
+				Db       int    `json:"db"`
 			}{
 				Addr:     "localhost:6379",
 				Password: "",
