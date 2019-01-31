@@ -1,6 +1,8 @@
 package core
 
-import "github.com/go-redis/redis"
+import (
+	"github.com/go-redis/redis"
+)
 
 var instanceRedis *redis.Client
 
@@ -14,4 +16,8 @@ func GetRedis() *redis.Client {
 		})
 	}
 	return instanceRedis
+}
+
+func init() {
+	println("init in redis ")
 }
