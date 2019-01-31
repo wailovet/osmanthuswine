@@ -15,7 +15,7 @@ type Db struct {
 var instanceDb *Db
 
 func CreateDbObject() (*Db, error) {
-	if instanceDb == nil || instanceDb.GormDB.DB().Ping() != nil {
+	if instanceDb == nil {
 		config := GetInstanceConfig()
 		mysqlConfig := mysql.NewConfig()
 		mysqlConfig.User = config.Db.User
