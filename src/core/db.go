@@ -30,6 +30,15 @@ func GetDb() (*gorm.DB, error) {
 	return instanceDb, nil
 }
 
+func GetDbAutoMigrate(values ...interface{}) (*gorm.DB, error) {
+	db, err := GetDb()
+	if err != nil {
+		return nil, err
+	}
+	db = db.AutoMigrate(values)
+	return db, err
+}
+
 func init() {
 	go func() {
 		for ; ; {
