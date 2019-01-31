@@ -2,19 +2,13 @@ package core
 
 import (
 	"github.com/go-sql-driver/mysql"
-	"github.com/go-xorm/xorm"
 	"github.com/jinzhu/gorm"
 	"time"
 )
 
-type Db struct {
-	XormEngine *xorm.Engine
-	GormDB     *gorm.DB
-}
+var instanceDb *gorm.DB
 
-var instanceDb *Db
-
-func CreateDbObject() (*Db, error) {
+func GetDb() (*gorm.DB, error) {
 	if instanceDb == nil {
 		config := GetInstanceConfig()
 		mysqlConfig := mysql.NewConfig()
@@ -31,10 +25,7 @@ func CreateDbObject() (*Db, error) {
 		}
 		db.DB().SetMaxOpenConns(config.Db.MaxOpenConn)
 		db.SingularTable(true)
-		instanceDb = &Db{
-			GormDB: db,
-		}
-		return instanceDb, err
+		return db, err
 	}
 	return instanceDb, nil
 }
@@ -43,10 +34,10 @@ func init() {
 	go func() {
 		for ; ; {
 			if instanceDb != nil {
-				err := instanceDb.GormDB.DB().Ping()
+				err := instanceDb.DB().Ping()
 				if err != nil {
 					println(err.Error())
-					instanceDb.GormDB.Close()
+					instanceDb.Close()
 					instanceDb = nil
 				}
 			}
