@@ -13,7 +13,7 @@ type Config struct {
 	CrossDomain   string `json:"cross_domain"`
 	ApiRouter     string `json:"api_router"`
 	PostMaxMemory int64  `json:"post_max_memory"`
-	Db struct {
+	Db            struct {
 		Host        string            `json:"host"`
 		Port        string            `json:"port"`
 		User        string            `json:"user"`
@@ -23,6 +23,11 @@ type Config struct {
 		MaxOpenConn int               `json:"max_open_conn"`
 		Params      map[string]string `json:"params"`
 	} `json:"db"`
+	Redis struct {
+		Addr     string `json:"addr"`
+		Password string `json:"password"`
+		Db       int    `json:"db"`
+	} `json:"redis"`
 }
 
 var instanceConfig *Config
@@ -65,6 +70,15 @@ func GetInstanceConfig() *Config {
 					"charset":   "utf8mb4",
 					"parseTime": "true",
 				},
+			},
+			Redis: struct {
+				Addr     string
+				Password string
+				Db       int
+			}{
+				Addr:     "localhost:6379",
+				Password: "",
+				Db:       0,
 			},
 		}
 
