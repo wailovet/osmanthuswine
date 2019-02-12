@@ -18,9 +18,11 @@ type Request struct {
 	HEADER  map[string]string
 	BODY    string
 	FILES   map[string][]*multipart.FileHeader
+	OriginRequest *http.Request
 }
 
 func (r *Request) SyncGetData(request *http.Request) {
+	r.OriginRequest = request
 	get := request.URL.Query()
 	r.GET = make(map[string]string)
 	for k := range get {
@@ -38,6 +40,7 @@ func (r *Request) SyncGetData(request *http.Request) {
 }
 
 func (r *Request) SyncPostData(request *http.Request, mem int64) {
+	r.OriginRequest = request
 	request.ParseForm()
 	request.ParseMultipartForm(mem)
 	r.POST = make(map[string]string)
@@ -72,6 +75,7 @@ func (r *Request) SyncPostData(request *http.Request, mem int64) {
 }
 
 func (r *Request) SyncHeaderData(request *http.Request) {
+	r.OriginRequest = request
 	r.HEADER = make(map[string]string)
 	header := request.Header
 	for k := range header {
@@ -83,6 +87,7 @@ func (r *Request) SyncHeaderData(request *http.Request) {
 }
 
 func (r *Request) SyncCookieData(request *http.Request) {
+	r.OriginRequest = request
 	cookie := request.Cookies()
 	r.COOKIE = make(map[string]string)
 	for k := range cookie {
