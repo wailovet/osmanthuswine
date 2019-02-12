@@ -17,13 +17,22 @@ import (
 	"github.com/wailovet/osmanthuswine/src/session"
 )
 
+var chiRouter *chi.Mux
+
+func GetChiRouter() *chi.Mux {
+	if chiRouter == nil {
+		chiRouter = chi.NewRouter()
+	}
+	return chiRouter
+}
+
 func Run() {
 	path, _ := GetCurrentPath()
 	os.Chdir(path)
 	log.Println("工作目录:", path)
 
 	cc := core.GetInstanceConfig()
-	r := chi.NewRouter()
+	r := GetChiRouter()
 
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
@@ -99,5 +108,5 @@ func GetCurrentPath() (string, error) {
 	if i < 0 {
 		return "", errors.New(`error: Can't find "/" or "\".`)
 	}
-	return string(path[0: i+1]), nil
+	return string(path[0 : i+1]), nil
 }
