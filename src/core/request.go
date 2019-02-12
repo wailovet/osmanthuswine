@@ -10,19 +10,21 @@ import (
 )
 
 type Request struct {
-	GET     map[string]string
-	POST    map[string]string
-	REQUEST map[string]string
-	COOKIE  map[string]string
-	SESSION map[string]string
-	HEADER  map[string]string
-	BODY    string
-	FILES   map[string][]*multipart.FileHeader
+	GET           map[string]string
+	POST          map[string]string
+	REQUEST       map[string]string
+	COOKIE        map[string]string
+	SESSION       map[string]string
+	HEADER        map[string]string
+	BODY          string
+	FILES         map[string][]*multipart.FileHeader
 	OriginRequest *http.Request
 }
 
 func (r *Request) SyncGetData(request *http.Request) {
-	r.OriginRequest = request
+	if r.OriginRequest == nil {
+		r.OriginRequest = request
+	}
 	get := request.URL.Query()
 	r.GET = make(map[string]string)
 	for k := range get {
@@ -32,7 +34,7 @@ func (r *Request) SyncGetData(request *http.Request) {
 			log.Println(err.Error())
 			r.GET[k] = str
 			r.REQUEST[k] = str
-		}else{
+		} else {
 			r.GET[k] = tmp
 			r.REQUEST[k] = tmp
 		}
@@ -40,7 +42,9 @@ func (r *Request) SyncGetData(request *http.Request) {
 }
 
 func (r *Request) SyncPostData(request *http.Request, mem int64) {
-	r.OriginRequest = request
+	if r.OriginRequest == nil {
+		r.OriginRequest = request
+	}
 	request.ParseForm()
 	request.ParseMultipartForm(mem)
 	r.POST = make(map[string]string)
@@ -53,7 +57,7 @@ func (r *Request) SyncPostData(request *http.Request, mem int64) {
 			log.Println(err.Error())
 			r.POST[k] = str
 			r.REQUEST[k] = str
-		}else{
+		} else {
 			r.POST[k] = tmp
 			r.REQUEST[k] = tmp
 		}
@@ -75,7 +79,9 @@ func (r *Request) SyncPostData(request *http.Request, mem int64) {
 }
 
 func (r *Request) SyncHeaderData(request *http.Request) {
-	r.OriginRequest = request
+	if r.OriginRequest == nil {
+		r.OriginRequest = request
+	}
 	r.HEADER = make(map[string]string)
 	header := request.Header
 	for k := range header {
@@ -87,7 +93,9 @@ func (r *Request) SyncHeaderData(request *http.Request) {
 }
 
 func (r *Request) SyncCookieData(request *http.Request) {
-	r.OriginRequest = request
+	if r.OriginRequest == nil {
+		r.OriginRequest = request
+	}
 	cookie := request.Cookies()
 	r.COOKIE = make(map[string]string)
 	for k := range cookie {
