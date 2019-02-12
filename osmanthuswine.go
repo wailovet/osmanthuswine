@@ -2,8 +2,6 @@ package osmanthuswine
 
 import (
 	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
-	"time"
 	"net/http"
 	"io/ioutil"
 	"os/exec"
@@ -15,13 +13,21 @@ import (
 	"github.com/wailovet/osmanthuswine/src/core"
 	"github.com/wailovet/osmanthuswine/src/helper"
 	"github.com/wailovet/osmanthuswine/src/session"
+	"github.com/go-chi/chi/middleware"
+	"time"
 )
 
 var chiRouter *chi.Mux
 
 func GetChiRouter() *chi.Mux {
 	if chiRouter == nil {
+
 		chiRouter = chi.NewRouter()
+		chiRouter.Use(middleware.RequestID)
+		chiRouter.Use(middleware.RealIP)
+		chiRouter.Use(middleware.Logger)
+		chiRouter.Use(middleware.Recoverer)
+		chiRouter.Use(middleware.Timeout(60 * time.Second))
 	}
 	return chiRouter
 }
@@ -34,11 +40,6 @@ func Run() {
 	cc := core.GetInstanceConfig()
 	r := GetChiRouter()
 
-	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
-	r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
-	r.Use(middleware.Timeout(60 * time.Second))
 	apiRouter := cc.ApiRouter
 
 	r.HandleFunc(apiRouter, func(writer http.ResponseWriter, request *http.Request) {
