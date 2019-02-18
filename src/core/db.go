@@ -21,6 +21,9 @@ func GetDb() (*gorm.DB, error) {
 
 		db, err := gorm.Open("mysql", mysqlConfig.FormatDSN())
 		gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
+			if defaultTableName[:len(config.Db.Prefix)] == config.Db.Prefix {
+				return defaultTableName
+			}
 			return config.Db.Prefix + defaultTableName
 		}
 		db.DB().SetMaxOpenConns(config.Db.MaxOpenConn)
