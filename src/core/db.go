@@ -44,7 +44,7 @@ func GetDbAuto() *gorm.DB {
 
 func GetDbAutoMigrate(values ...interface{}) *gorm.DB {
 	db := GetDbAuto()
-	db = db.AutoMigrate(values)
+	db = db.AutoMigrate(values...)
 	return db
 }
 
