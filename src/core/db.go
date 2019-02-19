@@ -28,7 +28,8 @@ func GetDb() (*gorm.DB, error) {
 		}
 		db.DB().SetMaxOpenConns(config.Db.MaxOpenConn)
 		db.SingularTable(true)
-		return db, err
+		instanceDb = db
+		return instanceDb, err
 	}
 	return instanceDb, nil
 }
