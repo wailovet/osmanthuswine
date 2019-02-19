@@ -4,6 +4,8 @@ import (
 	"github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"time"
+	"fmt"
+	"strings"
 )
 
 var instanceDb *gorm.DB
@@ -42,9 +44,30 @@ func GetDbAuto() *gorm.DB {
 	return db
 }
 
+var isUpdateComment = make(map[string]bool)
+
 func GetDbAutoMigrate(values ...interface{}) *gorm.DB {
 	db := GetDbAuto()
-	db = db.AutoMigrate(values...)
+	db.AutoMigrate(values...)
+
+	for _, value := range values {
+		scope := db.NewScope(value)
+		tableName := scope.TableName()
+		_, isOk := isUpdateComment[tableName]
+		if !isOk {
+			field := scope.Fields()
+			for e := range field {
+				fieldType := db.Dialect().DataTypeOf(field[e].StructField)
+				comment := field[e].Tag.Get("comment")
+
+				if len(strings.Trim(comment, " ")) > 0 {
+					scope.Raw(fmt.Sprintf("ALTER TABLE `%v` MODIFY COLUMN `%v` %v COMMENT '%v';", tableName, field[e].DBName, fieldType, comment)).Exec()
+				}
+			}
+		}
+		isUpdateComment[tableName] = true
+	}
+
 	return db
 }
 
