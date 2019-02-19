@@ -33,13 +33,13 @@ func GetDb() (*gorm.DB, error) {
 	return instanceDb, nil
 }
 
-func GetDbAutoMigrate(values ...interface{}) (*gorm.DB, error) {
+func GetDbAutoMigrate(values ...interface{}) *gorm.DB {
 	db, err := GetDb()
 	if err != nil {
-		return nil, err
+		panic("数据库访问错误")
 	}
 	db = db.AutoMigrate(values)
-	return db, err
+	return db
 }
 
 func init() {
