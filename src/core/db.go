@@ -57,10 +57,10 @@ func GetDbAutoMigrate(values ...interface{}) *gorm.DB {
 		if !isOk {
 			field := scope.Fields()
 			for e := range field {
-				fieldType := db.Dialect().DataTypeOf(field[e].StructField)
 				comment := field[e].Tag.Get("comment")
 
 				if len(strings.Trim(comment, " ")) > 0 {
+					fieldType := db.Dialect().DataTypeOf(field[e].StructField)
 					scope.Raw(fmt.Sprintf("ALTER TABLE `%v` MODIFY COLUMN `%v` %v COMMENT '%v';", tableName, field[e].DBName, fieldType, comment)).Exec()
 				}
 			}
