@@ -15,6 +15,7 @@ import (
 	"github.com/wailovet/osmanthuswine/src/session"
 	"github.com/go-chi/chi/middleware"
 	"time"
+	"fmt"
 )
 
 var chiRouter *chi.Mux
@@ -62,11 +63,22 @@ func Run() {
 
 		responseHandle := core.Response{ResWriter: writer, Session: sessionMan}
 
+		defer func() {
+			errs := recover()
+			if errs == nil {
+				return
+			}
+			responseHandle.DisplayByError(fmt.Sprintf("%v", errs), 500)
+
+		}()
+
 		responseHandle.ResWriter.Header().Set("Content-Type", "application/json;charset=UTF-8")
 		if cc.CrossDomain != "" {
 			responseHandle.ResWriter.Header().Set("Access-Control-Allow-Origin", cc.CrossDomain)
 		}
+
 		ok := core.GetInstanceRouterManage().RouterSend(request.URL.Path, requestData, responseHandle)
+
 		if ok == nil {
 			writer.WriteHeader(404)
 		}
@@ -109,5 +121,5 @@ func GetCurrentPath() (string, error) {
 	if i < 0 {
 		return "", errors.New(`error: Can't find "/" or "\".`)
 	}
-	return string(path[0 : i+1]), nil
+	return string(path[0: i+1]), nil
 }
