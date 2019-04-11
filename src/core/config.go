@@ -1,10 +1,10 @@
 package core
 
 import (
-	"io/ioutil"
-	"os"
 	"encoding/json"
+	"io/ioutil"
 	"log"
+	"os"
 )
 
 type Config struct {

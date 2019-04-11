@@ -1,13 +1,15 @@
 package core
 
 import (
+	"github.com/pkg/errors"
+	"log"
 	"reflect"
 	"strings"
 	"unicode"
 )
 
 type RouterManage struct {
-	RegisteredData map[string]reflect.Value
+	RegisteredData map[string]reflect.Type
 }
 
 var instanceRouterManage *RouterManage
@@ -15,14 +17,14 @@ var instanceRouterManage *RouterManage
 func GetInstanceRouterManage() *RouterManage {
 	if instanceRouterManage == nil {
 		instanceRouterManage = &RouterManage{} // not thread safe
-		instanceRouterManage.RegisteredData = make(map[string]reflect.Value)
+		instanceRouterManage.RegisteredData = make(map[string]reflect.Type)
 	}
 	return instanceRouterManage
 }
 
 func (rm *RouterManage) Registered(i interface{}) {
-	t := reflect.TypeOf(i)
-	GetInstanceRouterManage().RegisteredData[t.String()] = reflect.ValueOf(i)
+	t := reflect.ValueOf(i)
+	GetInstanceRouterManage().RegisteredData[t.Type().String()] = reflect.Indirect(t).Type()
 }
 
 func (rm *RouterManage) GetModuleName(name string) string {
@@ -50,22 +52,14 @@ func (rm *RouterManage) GetFunName(name string) string {
 	return "Index"
 }
 
-type RouterError struct {
-	What string
-}
-
-func (e RouterError) Error() string {
-	return e.What
-}
-
-func (rm *RouterManage) RouterSend(urlPath string, request Request, response Response) (error) {
+func (rm *RouterManage) RouterSend(urlPath string, request Request, response Response) error {
 	tmp := strings.Split(urlPath, ".")
 	if len(tmp) > 1 {
 		urlPath = strings.Join(tmp[0:len(tmp)-1], ".")
 	}
 
 	sar := strings.Split(urlPath, "/")
-	for ; len(sar) < 5; {
+	for len(sar) < 5 {
 		sar = append(sar, "")
 	}
 	//过滤非 /Api开头的
@@ -76,20 +70,25 @@ func (rm *RouterManage) RouterSend(urlPath string, request Request, response Res
 	ctr := "*" + module + "." + controller
 
 	_, ok := rm.RegisteredData[ctr]
-
 	if !ok {
-		return RouterError{
-			"未注册该组件:" + ctr,
-		}
+		return errors.New("未注册该组件:" + ctr)
 	}
 
-	f := rm.RegisteredData[ctr].MethodByName(fun)
+	vc := reflect.New(rm.RegisteredData[ctr])
+	f := vc.MethodByName(fun)
 	if !f.IsValid() {
-		return RouterError{
-			"组件找不到相应function:" + fun,
-		}
+		return errors.New("组件找不到相应function:" + fun)
 	}
-	f.Call([]reflect.Value{reflect.ValueOf(request), reflect.ValueOf(response)})
+
+	init := vc.MethodByName("ControllerInit")
+	if init.IsValid() {
+		init.Call([]reflect.Value{reflect.ValueOf(request), reflect.ValueOf(response)})
+		f.Call(nil)
+	} else {
+		//兼容模式
+		log.Println("兼容模式")
+		f.Call([]reflect.Value{reflect.ValueOf(request), reflect.ValueOf(response)})
+	}
 
 	return nil
 }

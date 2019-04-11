@@ -1,9 +1,9 @@
 package core
 
 import (
-	"net/http"
 	"encoding/json"
 	"github.com/wailovet/osmanthuswine/src/session"
+	"net/http"
 )
 
 type ResponseData struct {
@@ -13,22 +13,24 @@ type ResponseData struct {
 }
 
 type Response struct {
-	ResWriter http.ResponseWriter
-	Session   *session.Session
+	Session              *session.Session
+	OriginResponseWriter http.ResponseWriter
 }
 
 func (r *Response) DisplayByString(data string) {
-	r.ResWriter.Write([]byte(data))
+	r.OriginResponseWriter.Write([]byte(data))
+	panic(nil)
 }
 func (r *Response) DisplayByRaw(data []byte) {
-	r.ResWriter.Write(data)
+	r.OriginResponseWriter.Write(data)
+	panic(nil)
 }
 
 func (r *Response) Display(data interface{}, msg string, code int) {
 	result := ResponseData{code, data, msg}
 	text, err := json.Marshal(result)
 	if err != nil {
-		r.ResWriter.WriteHeader(500)
+		r.OriginResponseWriter.WriteHeader(500)
 		r.DisplayByString("服务器异常:" + err.Error())
 	}
 	r.DisplayByRaw(text)
@@ -86,9 +88,9 @@ func (r *Response) SetCookie(name string, value string) {
 		Secure:   false,
 		HttpOnly: false,
 	}
-	http.SetCookie(r.ResWriter, cookie)
+	http.SetCookie(r.OriginResponseWriter, cookie)
 }
 
 func (r *Response) SetHeader(name string, value string) {
-	r.ResWriter.Header().Set(name, value)
+	r.OriginResponseWriter.Header().Set(name, value)
 }

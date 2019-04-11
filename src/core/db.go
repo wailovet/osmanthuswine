@@ -1,11 +1,11 @@
 package core
 
 import (
+	"fmt"
 	"github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
-	"time"
-	"fmt"
 	"strings"
+	"time"
 )
 
 var instanceDb *gorm.DB
@@ -73,7 +73,7 @@ func GetDbAutoMigrate(values ...interface{}) *gorm.DB {
 
 func init() {
 	go func() {
-		for ; ; {
+		for {
 			if instanceDb != nil {
 				err := instanceDb.DB().Ping()
 				if err != nil {

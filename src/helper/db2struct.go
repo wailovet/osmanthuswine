@@ -1,10 +1,10 @@
 package helper
 
 import (
+	"github.com/go-errors/errors"
 	"github.com/wailovet/db2struct"
 	"github.com/wailovet/osmanthuswine/src/core"
 	"strconv"
-	"github.com/go-errors/errors"
 )
 
 func GetStructByDb(tableName string, packageName string, structName string) (string, error) {

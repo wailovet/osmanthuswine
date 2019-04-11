@@ -1,12 +1,12 @@
 package core
 
 import (
+	"github.com/wailovet/osmanthuswine/src/session"
+	"io/ioutil"
+	"log"
 	"mime/multipart"
 	"net/http"
-	"io/ioutil"
-	"github.com/wailovet/osmanthuswine/src/session"
 	"net/url"
-	"log"
 )
 
 type Request struct {

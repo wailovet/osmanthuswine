@@ -1,21 +1,21 @@
 package osmanthuswine
 
 import (
-	"github.com/go-chi/chi"
-	"net/http"
-	"io/ioutil"
-	"os/exec"
-	"os"
-	"path/filepath"
-	"strings"
 	"errors"
-	"log"
+	"fmt"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"github.com/wailovet/osmanthuswine/src/core"
 	"github.com/wailovet/osmanthuswine/src/helper"
 	"github.com/wailovet/osmanthuswine/src/session"
-	"github.com/go-chi/chi/middleware"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strings"
 	"time"
-	"fmt"
 )
 
 var chiRouter *chi.Mux
@@ -61,20 +61,23 @@ func Run() {
 		//SESSION
 		requestData.SyncSessionData(sessionMan)
 
-		responseHandle := core.Response{ResWriter: writer, Session: sessionMan}
+		responseHandle := core.Response{OriginResponseWriter: writer, Session: sessionMan}
 
 		defer func() {
 			errs := recover()
 			if errs == nil {
 				return
 			}
-			responseHandle.DisplayByError(fmt.Sprintf("%v", errs), 500)
+			errtxt := fmt.Sprintf("%v", errs)
+			if errtxt != "" {
+				responseHandle.DisplayByError(errtxt, 500)
+			}
 
 		}()
 
-		responseHandle.ResWriter.Header().Set("Content-Type", "application/json;charset=UTF-8")
+		responseHandle.OriginResponseWriter.Header().Set("Content-Type", "application/json;charset=UTF-8")
 		if cc.CrossDomain != "" {
-			responseHandle.ResWriter.Header().Set("Access-Control-Allow-Origin", cc.CrossDomain)
+			responseHandle.OriginResponseWriter.Header().Set("Access-Control-Allow-Origin", cc.CrossDomain)
 		}
 
 		ok := core.GetInstanceRouterManage().RouterSend(request.URL.Path, requestData, responseHandle)
@@ -121,5 +124,5 @@ func GetCurrentPath() (string, error) {
 	if i < 0 {
 		return "", errors.New(`error: Can't find "/" or "\".`)
 	}
-	return string(path[0: i+1]), nil
+	return string(path[0 : i+1]), nil
 }
