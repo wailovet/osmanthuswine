@@ -8,12 +8,16 @@ import (
 	"github.com/wailovet/osmanthuswine/src/core"
 	"github.com/wailovet/osmanthuswine/src/helper"
 	"github.com/wailovet/osmanthuswine/src/session"
+	"github.com/wailovet/overseer"
+	"github.com/wailovet/overseer/fetcher"
 	"io/ioutil"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -32,13 +36,37 @@ func GetChiRouter() *chi.Mux {
 	}
 	return chiRouter
 }
-
 func Run() {
 	path, _ := GetCurrentPath()
 	os.Chdir(path)
 	log.Println("工作目录:", path)
+	cc := core.GetInstanceConfig()
+
+	if runtime.GOOS == "windows" {
+		listener, err := net.Listen("tcp", cc.Host+":"+cc.Port)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		RunProg(overseer.State{
+			Listener: listener,
+		})
+	} else {
+		overseer.Run(overseer.Config{
+			Program: RunProg,
+			Address: cc.Host + ":" + cc.Port,
+			Fetcher: &fetcher.File{
+				Path:     cc.UpdateDir + cc.UpdatePath,
+				Interval: time.Second * 10,
+			},
+		})
+	}
+
+}
+func RunProg(state overseer.State) {
 
 	cc := core.GetInstanceConfig()
+	helper.GetInstanceLog().Out("开始监听:", cc.Host+":"+cc.Port)
+
 	r := GetChiRouter()
 
 	apiRouter := cc.ApiRouter
@@ -96,16 +124,27 @@ func Run() {
 		}
 
 		helper.GetInstanceLog().Out("静态文件:", "./html"+path)
-		data, err := ioutil.ReadFile("./html" + path)
+
+		f, err := os.Stat("./html" + path)
 		if err == nil {
-			writer.Write([]byte(data))
-		} else {
-			writer.WriteHeader(404)
-			writer.Write([]byte(""))
+			if f.IsDir() {
+				path += "/index.html"
+			}
+			data, err := ioutil.ReadFile("./html" + path)
+			if err == nil {
+				writer.Write(data)
+				return
+			}
 		}
+
+		writer.WriteHeader(404)
+		writer.Write([]byte(err.Error()))
+
 	})
-	helper.GetInstanceLog().Out("开始监听:", cc.Host+":"+cc.Port)
-	http.ListenAndServe(cc.Host+":"+cc.Port, r)
+
+	http.Serve(state.Listener, r)
+	//http.ListenAndServe(cc.Host+":"+cc.Port, r)
+
 }
 
 func GetCurrentPath() (string, error) {

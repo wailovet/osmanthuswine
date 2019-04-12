@@ -3,5 +3,6 @@
   "host": "0.0.0.0",
   "cross_domain": "*",
   "post_max_memory": 1024000,
-  "api_router": "/Api/*"
+  "api_router": "/Api/*",
+  "update_path": "example_update"
 }

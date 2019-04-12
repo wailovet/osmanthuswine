@@ -28,6 +28,8 @@ type Config struct {
 		Password string `json:"password"`
 		Db       int    `json:"db"`
 	} `json:"redis"`
+	UpdateDir  string `json:"update_dir"`
+	UpdatePath string `json:"update_path"`
 }
 
 var instanceConfig *Config
@@ -81,6 +83,8 @@ func GetInstanceConfig() *Config {
 				Password: "",
 				Db:       0,
 			},
+			UpdateDir:  "",
+			UpdatePath: os.Args[0] + "_update",
 		}
 
 		instanceConfig.ReadConfig(configFile)
