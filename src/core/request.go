@@ -18,6 +18,7 @@ type Request struct {
 	HEADER        map[string]string
 	BODY          string
 	FILES         map[string][]*multipart.FileHeader
+	FILE          *multipart.FileHeader
 	OriginRequest *http.Request
 }
 
@@ -65,6 +66,14 @@ func (r *Request) SyncPostData(request *http.Request, mem int64) {
 
 	if request.MultipartForm != nil {
 		r.FILES = request.MultipartForm.File
+		if len(r.FILES) > 0 {
+			for fe := range r.FILES {
+				for fk := range r.FILES[fe] {
+					r.FILE = r.FILES[fe][fk]
+				}
+			}
+		}
+
 		mf := request.MultipartForm.Value
 		for k := range mf {
 			if len(mf[k]) > 0 {
