@@ -45,6 +45,13 @@ func (r *Response) DisplayByError(msg string, code int) {
 	r.DisplayByRaw(text)
 }
 
+func (r *Response) CheckErrDisplayByError(err error) {
+	if err == nil {
+		return
+	}
+	r.DisplayByError(err.Error(), 500)
+}
+
 func (r *Response) DisplayBySuccess(msg string) {
 	result := ResponseData{0, nil, msg}
 	text, err := json.Marshal(result)
