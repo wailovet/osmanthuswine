@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/wailovet/osmanthuswine/src/session"
 	"net/http"
+	"strings"
 )
 
 type ResponseData struct {
@@ -45,11 +46,15 @@ func (r *Response) DisplayByError(msg string, code int) {
 	r.DisplayByRaw(text)
 }
 
-func (r *Response) CheckErrDisplayByError(err error) {
+func (r *Response) CheckErrDisplayByError(err error, msg ...string) {
 	if err == nil {
 		return
 	}
-	r.DisplayByError(err.Error(), 500)
+	if len(msg) > 0 {
+		r.DisplayByError(strings.Join(msg, ","), 500)
+	} else {
+		r.DisplayByError(err.Error(), 500)
+	}
 }
 
 func (r *Response) DisplayBySuccess(msg string) {
