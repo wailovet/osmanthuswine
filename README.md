@@ -26,6 +26,7 @@ config.json
   "host": "0.0.0.0",
   "cross_domain": "*",
   "post_max_memory": 1024000,
+  "update_path": "new_exe",
   "db": {
     "host": "",
     "port": "",
@@ -184,3 +185,14 @@ prefix为表前缀
 max_open_conn为可支持最大连接数(未测试是否可用
 ```
 
+## 杂项
+> 热更新,仅支持linux
+```
+默认情况下,检测同路径下的<文件名_update>,如果该文件与当前文件不一致,则进行热更,已连接的连接无需断连
+可在config.json中配置检测的文件名
+{
+    ...其他配置
+    "update_path": "需要检测的文件路径"
+}
+备注:需要检测的文件路径最好不要与当前运行的文件路径相同
+```
