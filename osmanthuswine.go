@@ -100,7 +100,6 @@ func RunProg(state overseer.State) {
 			if errtxt != "" {
 				responseHandle.DisplayByError(errtxt, 500)
 			}
-
 		}()
 
 		core.GetInstanceRouterManage().RouterSend(request.URL.Path, requestData, responseHandle, cc.CrossDomain)

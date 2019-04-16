@@ -1,7 +1,6 @@
 package core
 
 import (
-	"github.com/pkg/errors"
 	"github.com/wailovet/osmanthuswine/src/interfaces"
 	"log"
 	"reflect"
@@ -53,7 +52,7 @@ func (rm *RouterManage) GetFunName(name string) string {
 	return "Index"
 }
 
-func (rm *RouterManage) RouterSend(urlPath string, request Request, response Response, crossDomain string) error {
+func (rm *RouterManage) RouterSend(urlPath string, request Request, response Response, crossDomain string) {
 	tmp := strings.Split(urlPath, ".")
 	if len(tmp) > 1 {
 		urlPath = strings.Join(tmp[0:len(tmp)-1], ".")
@@ -72,7 +71,7 @@ func (rm *RouterManage) RouterSend(urlPath string, request Request, response Res
 
 	_, ok := rm.RegisteredData[ctr]
 	if !ok {
-		return errors.New("未注册该组件:" + ctr)
+		panic("未注册该组件:" + ctr)
 	}
 
 	vc := reflect.New(rm.RegisteredData[ctr])
@@ -92,12 +91,11 @@ func (rm *RouterManage) RouterSend(urlPath string, request Request, response Res
 		}()
 
 		ws.HandleRequest(response.OriginResponseWriter, request.OriginRequest)
-		return nil
 	}
 
 	f := vc.MethodByName(fun)
 	if !f.IsValid() {
-		return errors.New("组件找不到相应function:" + fun)
+		panic("组件找不到相应function:" + fun)
 	}
 
 	init := vc.MethodByName("ControllerInit")
@@ -115,5 +113,4 @@ func (rm *RouterManage) RouterSend(urlPath string, request Request, response Res
 		response.OriginResponseWriter.Header().Set("Access-Control-Allow-Origin", crossDomain)
 	}
 
-	return nil
 }

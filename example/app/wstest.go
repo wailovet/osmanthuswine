@@ -9,35 +9,35 @@ type Wstest struct {
 	core.WebSocket
 }
 
-func (that *Wstest) HandleConnect(*melody.Session) {
-	//panic("implement me")
+func (that *Wstest) HandleConnect(session *melody.Session) {
+	//implement
 }
 
-func (that *Wstest) HandlePong(*melody.Session) {
-	//panic("implement me")
+func (that *Wstest) HandlePong(session *melody.Session) {
+	//implement
 }
 
-func (that *Wstest) HandleMessage(s *melody.Session, d []byte) {
-	that.GetMelody().Broadcast(d)
-	//panic("implement me")
+func (that *Wstest) HandleMessage(session *melody.Session, data []byte) {
+	that.GetMelody().Broadcast(data)
+	//implement
 }
 
-func (that *Wstest) HandleMessageBinary(*melody.Session, []byte) {
-	//panic("implement me")
+func (that *Wstest) HandleMessageBinary(session *melody.Session, data []byte) {
+	//implement
 }
 
-func (that *Wstest) HandleSentMessage(*melody.Session, []byte) {
-	//panic("implement me")
+func (that *Wstest) HandleSentMessage(session *melody.Session, data []byte) {
+	//implement
 }
 
-func (that *Wstest) HandleSentMessageBinary(*melody.Session, []byte) {
-	//panic("implement me")
+func (that *Wstest) HandleSentMessageBinary(session *melody.Session, data []byte) {
+	//implement
 }
 
-func (that *Wstest) HandleDisconnect(*melody.Session) {
-	//panic("implement me")
+func (that *Wstest) HandleDisconnect(session *melody.Session) {
+	//implement
 }
 
-func (that *Wstest) HandleError(*melody.Session, error) {
-	//panic("implement me")
+func (that *Wstest) HandleError(session *melody.Session, err error) {
+	//implement
 }

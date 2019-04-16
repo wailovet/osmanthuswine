@@ -185,6 +185,65 @@ prefix为表前缀
 max_open_conn为可支持最大连接数(未测试是否可用
 ```
 
+## 支持WebSocket
+> 当传入core.GetInstanceRouterManage().Registered的对象继承自core.WebSocket时,协议升级为websocket,路由地址忽略最后方法名
+
+
+#### 集成melody库,使用详情https://github.com/olahol/melody
+```
+package index
+
+import (
+	"github.com/wailovet/osmanthuswine/src/core"
+	"gopkg.in/olahol/melody.v1"
+)
+
+type Index struct {
+	core.WebSocket
+}
+
+func (that *Wstest) HandleConnect(session *melody.Session) {
+	//implement
+}
+
+func (that *Wstest) HandlePong(session *melody.Session) {
+	//implement
+}
+
+func (that *Wstest) HandleMessage(session *melody.Session, data []byte) {
+	that.GetMelody().Broadcast(data)
+	//implement
+}
+
+func (that *Wstest) HandleMessageBinary(session *melody.Session, data []byte) {
+	//implement
+}
+
+func (that *Wstest) HandleSentMessage(session *melody.Session, data []byte) {
+	//implement
+}
+
+func (that *Wstest) HandleSentMessageBinary(session *melody.Session, data []byte) {
+	//implement
+}
+
+func (that *Wstest) HandleDisconnect(session *melody.Session) {
+	//implement
+}
+
+func (that *Wstest) HandleError(session *melody.Session, err error) {
+	//implement
+}
+
+```
+
+```
+//javascript
+var ws = new WebSocket("ws://127.0.0.1/Api/Index/Index")
+```
+> PS:不同url对应不同的melody实例
+
+
 ## 杂项
 > 热更新,仅支持linux
 ```
