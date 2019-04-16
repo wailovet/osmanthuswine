@@ -2,6 +2,7 @@ package core
 
 import (
 	"github.com/pkg/errors"
+	"github.com/wailovet/osmanthuswine/src/interfaces"
 	"log"
 	"reflect"
 	"strings"
@@ -52,7 +53,7 @@ func (rm *RouterManage) GetFunName(name string) string {
 	return "Index"
 }
 
-func (rm *RouterManage) RouterSend(urlPath string, request Request, response Response) error {
+func (rm *RouterManage) RouterSend(urlPath string, request Request, response Response, crossDomain string) error {
 	tmp := strings.Split(urlPath, ".")
 	if len(tmp) > 1 {
 		urlPath = strings.Join(tmp[0:len(tmp)-1], ".")
@@ -75,6 +76,25 @@ func (rm *RouterManage) RouterSend(urlPath string, request Request, response Res
 	}
 
 	vc := reflect.New(rm.RegisteredData[ctr])
+
+	wsinit := vc.MethodByName("WebSocketInit")
+	if wsinit.IsValid() {
+		response.IsWebSocket = true
+		hand := vc.Interface().(interfaces.WebSocketInterface)
+		ws := GetWebSocket(ctr, hand)
+		hand.WebSocketInit(ws)
+		defer func() {
+			errs := recover()
+			if errs == nil {
+				return
+			}
+			log.Printf("websocket error:%v", errs)
+		}()
+
+		ws.HandleRequest(response.OriginResponseWriter, request.OriginRequest)
+		return nil
+	}
+
 	f := vc.MethodByName(fun)
 	if !f.IsValid() {
 		return errors.New("组件找不到相应function:" + fun)
@@ -88,6 +108,11 @@ func (rm *RouterManage) RouterSend(urlPath string, request Request, response Res
 		//兼容模式
 		log.Println("兼容模式")
 		f.Call([]reflect.Value{reflect.ValueOf(request), reflect.ValueOf(response)})
+	}
+
+	response.OriginResponseWriter.Header().Set("Content-Type", "application/json;charset=UTF-8")
+	if crossDomain != "" {
+		response.OriginResponseWriter.Header().Set("Access-Control-Allow-Origin", crossDomain)
 	}
 
 	return nil

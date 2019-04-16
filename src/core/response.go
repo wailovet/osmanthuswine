@@ -15,16 +15,20 @@ type ResponseData struct {
 
 type Response struct {
 	Session              *session.Session
+	IsWebSocket          bool
 	OriginResponseWriter http.ResponseWriter
 }
 
-func (r *Response) DisplayByString(data string) {
-	r.OriginResponseWriter.Write([]byte(data))
-	panic(nil)
-}
 func (r *Response) DisplayByRaw(data []byte) {
+	if r.IsWebSocket {
+		panic(nil)
+		return
+	}
 	r.OriginResponseWriter.Write(data)
-	panic(nil)
+}
+
+func (r *Response) DisplayByString(data string) {
+	r.DisplayByRaw([]byte(data))
 }
 
 func (r *Response) Display(data interface{}, msg string, code int) {

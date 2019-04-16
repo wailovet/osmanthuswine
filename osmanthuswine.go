@@ -103,17 +103,7 @@ func RunProg(state overseer.State) {
 
 		}()
 
-		responseHandle.OriginResponseWriter.Header().Set("Content-Type", "application/json;charset=UTF-8")
-		if cc.CrossDomain != "" {
-			responseHandle.OriginResponseWriter.Header().Set("Access-Control-Allow-Origin", cc.CrossDomain)
-		}
-
-		ok := core.GetInstanceRouterManage().RouterSend(request.URL.Path, requestData, responseHandle)
-
-		if ok == nil {
-			writer.WriteHeader(404)
-		}
-		writer.Write([]byte(""))
+		core.GetInstanceRouterManage().RouterSend(request.URL.Path, requestData, responseHandle, cc.CrossDomain)
 
 	})
 
