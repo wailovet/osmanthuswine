@@ -22,6 +22,7 @@ type Config struct {
 		Prefix      string            `json:"prefix"`
 		MaxOpenConn int               `json:"max_open_conn"`
 		Params      map[string]string `json:"params"`
+		Debug       bool              `json:"debug"`
 	} `json:"db"`
 	Redis struct {
 		Addr     string `json:"addr"`
@@ -61,6 +62,7 @@ func GetInstanceConfig() *Config {
 				Prefix      string            `json:"prefix"`
 				MaxOpenConn int               `json:"max_open_conn"`
 				Params      map[string]string `json:"params"`
+				Debug       bool              `json:"debug"`
 			}{
 				Host:        "localhost",
 				Port:        "3306",
@@ -73,6 +75,7 @@ func GetInstanceConfig() *Config {
 					"charset":   "utf8mb4",
 					"parseTime": "true",
 				},
+				Debug: true,
 			},
 			Redis: struct {
 				Addr     string `json:"addr"`

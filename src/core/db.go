@@ -36,12 +36,45 @@ func GetDb() (*gorm.DB, error) {
 	return instanceDb, nil
 }
 
+func GetGormAuto() *gorm.DB {
+	return GetDbAuto()
+}
+
 func GetDbAuto() *gorm.DB {
 	db, err := GetDb()
 	if err != nil {
 		panic("数据库访问错误")
 	}
 	return db
+}
+
+func DbQuery(query string, args ...interface{}) []map[string]interface{} {
+	db := GetDbAuto()
+	rows, _ := db.DB().Query(query, args...) // Note: Ignoring errors for brevity
+	defer rows.Close()
+	cols, _ := rows.Columns()
+	var data []map[string]interface{}
+	for rows.Next() {
+		columns := make([]interface{}, len(cols))
+		columnPointers := make([]interface{}, len(cols))
+		for i, _ := range columns {
+			columnPointers[i] = &columns[i]
+		}
+
+		// Scan the result into the column pointers...
+		if err := rows.Scan(columnPointers...); err != nil {
+			panic(err)
+		}
+		// Create our map, and retrieve the value for each column from the pointers slice,
+		// storing it in the map with the name of the column as the key.
+		m := make(map[string]interface{})
+		for i, colName := range cols {
+			val := columnPointers[i].(*interface{})
+			m[colName] = *val
+		}
+		data = append(data, m)
+	}
+	return data
 }
 
 var isUpdateComment = make(map[string]bool)

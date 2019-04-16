@@ -63,38 +63,41 @@ func main() {
 package index
 
 import (
-	"github.com/wailovet/osmanthuswine/src/core"
+    "github.com/wailovet/osmanthuswine/src/core"
 )
 
 type Index struct {
+    core.Controller
 }
 
-func (n *Index) Index(req core.Request, res core.Response) {
-	res.DisplayByData(req)
+func (that *Index) Index() {
+    that.DisplayByData(that.Request.REQUEST)
 }
 
 ```
-## core.Request 使用说明
+## core.Controller.Request 使用说明
 #### 输入参数 
-+ req.GET["参数"] //类型:map[string]string
-+ req.POST["参数"] //类型:map[string]string
-+ req.REQUEST["参数"] //类型:map[string]string , 为GET以及POST的合并值,当出现值冲突时GET参数会被覆盖
++ that.Request.GET["参数"] //类型:map[string]string
++ that.Request.POST["参数"] //类型:map[string]string
++ that.Request.REQUEST["参数"] //类型:map[string]string , 为GET以及POST的合并值,当出现值冲突时GET参数会被覆盖
 #### session与cookie获取
-+ req.SESSION["参数"] //类型:map[string]string
-+ req.COOKIE["参数"] //类型:map[string]string
++ that.Request.SESSION["参数"] //类型:map[string]string
++ that.Request.COOKIE["参数"] //类型:map[string]string
 #### header信息获取
-+ req.HEADER["参数"] //类型:map[string]string
++ that.Request.HEADER["参数"] //类型:map[string]string
 #### 该取值一般以POST-RAW形式传入原始数据,有可能
-+ req.BODY //类型:string
-#### 获取上传的文件,比较少用到,具体用法懒得写
-+ req.FILES //类型:map[string][]*multipart.FileHeader
++ that.Request.BODY //类型:string
+#### 快速获取上传的文件
++ that.Request.FILE //类型:*multipart.FileHeader
+#### 获取上传的所有文件
++ that.Request.FILES //类型:map[string][]*multipart.FileHeader
 
 
 
-## core.Responsea 使用说明
+## core.Controller 使用说明
 #### 输出显示
-> 如果输出时不处于函数结尾,记得return
-+ res.DisplayByData(data interface{})
+> 即使输出时不处于函数结尾,也无需return
++ that.DisplayByData(data interface{})
 ```
 {
     "code":0,
@@ -103,7 +106,7 @@ func (n *Index) Index(req core.Request, res core.Response) {
 }
 ```
 - - -
-+ res.DisplayBySuccess(msg string)
++ that.DisplayBySuccess(msg string)
 ```
 {
     "code":0,
@@ -112,7 +115,7 @@ func (n *Index) Index(req core.Request, res core.Response) {
 }
 ```
 - - -
-+ res.DisplayByError(msg string, code int)
++ that.DisplayByError(msg string, code int)
 ```
 {
     "code":code,
@@ -121,7 +124,7 @@ func (n *Index) Index(req core.Request, res core.Response) {
 }
 ```
 - - -
-+ res.Display(data interface{}, msg string, code int)
++ that.Display(data interface{}, msg string, code int)
 ```
 {
     "code":code,
@@ -130,21 +133,54 @@ func (n *Index) Index(req core.Request, res core.Response) {
 }
 ```
 - - -
-+ res.DisplayByString(data string)
++ that.DisplayByString(data string)
 ```
 data //直接输出data以string形式
 ```
 - - -
-+ res.DisplayByRaw(data []byte)
++ that.DisplayByRaw(data []byte)
 ```
 data //直接输出data以[]byte形式,可用于直接输出二进制文件
 ```
+- - -
+##### 20190416新增
++ that.CheckErrDisplayByError(err error,msg...)
+```
+err //错误信息,自动判断是否等于nil,如果等于nil该语句会被忽略
+msg //错误文案提示,不填直接输出err.Error()
+```
+
 #### session操作
 > 目前session实现基于securecookie,以加密形式储存在cookie中,注意不要存放大量数据,以免超过cookie的最大储存值
-+ res.SetSession(name string, value string) //设置session
-+ res.DeleteSession(name string) //删除session
-+ res.ClearSession() //清空session
++ that.SetSession(name string, value string) //设置session
++ that.DeleteSession(name string) //删除session
++ that.ClearSession() //清空session
 
 #### cookie操作
 > 尽量以session的形式操作
-+ res.SetCookie(name string, value string)
++ that.SetCookie(name string, value string)
+
+
+## 数据库操作
+> 目前框架中集成gorm与xorm框架
++ core.GetXormAuto() //获取xorm实例
++ core.GetGormAuto() //获取gorm实例
+#### 数据库配置
+```
+实例的数据库配置来自于相同目录下的config.json或者private.json文件
+{
+  ...其他配置
+  "db": {
+    "host": "",
+    "port": "",
+    "user": "",
+    "password": "",
+    "name": "",
+    "prefix": "",
+    "max_open_conn": 500
+  }
+} 
+prefix为表前缀
+max_open_conn为可支持最大连接数(未测试是否可用
+```
+
