@@ -18,6 +18,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"runtime/debug"
 	"strings"
 	"time"
 )
@@ -98,7 +99,7 @@ func RunProg(state overseer.State) {
 			}
 			errtxt := fmt.Sprintf("%v", errs)
 			if errtxt != "" {
-				responseHandle.DisplayByError(errtxt, 500)
+				responseHandle.DisplayByError(string(debug.Stack()), 500)
 			}
 		}()
 
