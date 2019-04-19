@@ -56,9 +56,9 @@ func (r *Response) CheckErrDisplayByError(err error, msg ...string) {
 		return
 	}
 	if len(msg) > 0 {
-		r.DisplayByError(strings.Join(msg, ","), 500)
+		r.DisplayByError(strings.Join(msg, ","), 504)
 	} else {
-		r.DisplayByError(err.Error(), 500)
+		r.DisplayByError(err.Error(), 504)
 	}
 }
 
