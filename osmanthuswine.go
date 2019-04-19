@@ -42,7 +42,7 @@ func Run() {
 	log.Println("工作目录:", path)
 	cc := core.GetInstanceConfig()
 
-	if runtime.GOOS == "windows" {
+	if runtime.GOOS == "windows" || cc.UpdatePath == "" {
 		listener, err := net.Listen("tcp", cc.Host+":"+cc.Port)
 		if err != nil {
 			log.Fatal(err.Error())
