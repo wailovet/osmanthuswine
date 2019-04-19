@@ -25,6 +25,7 @@ func (r *Response) DisplayByRaw(data []byte) {
 		return
 	}
 	r.OriginResponseWriter.Write(data)
+	panic(nil)
 }
 
 func (r *Response) DisplayByString(data string) {
