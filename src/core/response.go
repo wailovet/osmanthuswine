@@ -42,8 +42,8 @@ func (r *Response) Display(data interface{}, msg string, code int) {
 	r.DisplayByRaw(text)
 }
 
-func (r *Response) DisplayByError(msg string, code int) {
-	result := ResponseData{code, nil, msg}
+func (r *Response) DisplayByError(msg string, code int, data ...string) {
+	result := ResponseData{code, data, msg}
 	text, err := json.Marshal(result)
 	if err != nil {
 		r.Display(nil, "JSON返回格式解析异常:"+err.Error(), 500)

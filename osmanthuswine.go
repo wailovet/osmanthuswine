@@ -99,7 +99,7 @@ func RunProg(state overseer.State) {
 			}
 			errtxt := fmt.Sprintf("%v", errs)
 			if errtxt != "" {
-				responseHandle.DisplayByError(string(debug.Stack()), 500)
+				responseHandle.DisplayByError(errtxt, 500, strings.Split(string(debug.Stack()), "\n\t")...)
 			}
 		}()
 
