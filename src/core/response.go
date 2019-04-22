@@ -24,6 +24,8 @@ func (r *Response) DisplayByRaw(data []byte) {
 		panic(nil)
 		return
 	}
+
+	r.OriginResponseWriter.Header().Add("Content-Type", "application/json; charset=utf-8")
 	r.OriginResponseWriter.Write(data)
 	panic(nil)
 }
