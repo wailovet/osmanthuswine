@@ -91,6 +91,7 @@ func (rm *RouterManage) RouterSend(urlPath string, request Request, response Res
 		}()
 
 		ws.HandleRequest(response.OriginResponseWriter, request.OriginRequest)
+		return
 	}
 
 	f := vc.MethodByName(fun)
