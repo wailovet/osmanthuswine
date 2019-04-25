@@ -6,6 +6,7 @@ import (
 
 //WebSocketInterface interface
 type WebSocketInterface interface {
+	SetFunName(funName string)
 	WebSocketInit(ws *melody.Melody)
 	GetWebSocket() *melody.Melody
 	GetMelody() *melody.Melody

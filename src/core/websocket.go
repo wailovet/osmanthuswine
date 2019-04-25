@@ -10,7 +10,12 @@ import (
 var instanceMelody sync.Map
 
 type WebSocket struct {
-	ws *melody.Melody
+	ws      *melody.Melody
+	FunName string
+}
+
+func (that *WebSocket) SetFunName(funName string) {
+	that.FunName = funName
 }
 
 func (that *WebSocket) WebSocketInit(wsx *melody.Melody) {

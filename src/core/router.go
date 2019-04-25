@@ -80,7 +80,8 @@ func (rm *RouterManage) RouterSend(urlPath string, request Request, response Res
 	if wsinit.IsValid() {
 		response.IsWebSocket = true
 		hand := vc.Interface().(interfaces.WebSocketInterface)
-		ws := GetWebSocket(ctr, hand)
+		ws := GetWebSocket(ctr+"-"+fun, hand)
+		hand.SetFunName(fun)
 		hand.WebSocketInit(ws)
 		defer func() {
 			errs := recover()
@@ -90,7 +91,7 @@ func (rm *RouterManage) RouterSend(urlPath string, request Request, response Res
 			log.Printf("websocket error:%v", errs)
 		}()
 
-		ws.HandleRequest(response.OriginResponseWriter, request.OriginRequest)
+		_ = ws.HandleRequest(response.OriginResponseWriter, request.OriginRequest)
 		return
 	}
 
