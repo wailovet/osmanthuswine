@@ -3,17 +3,6 @@
 # 框架引入
 > go get -u github.com/wailovet/osmanthuswine
 
-### 目录结构
-```
-app
- |--index
-      |--index.go
-html
- |--静态文件....
-main.go
-config.json
-```
-
 # 开始
 #### 创建以上目录结构
 
