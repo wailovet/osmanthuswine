@@ -77,10 +77,12 @@ func (rm *RouterManage) RouterSend(urlPath string, request Request, response Res
 	vc := reflect.New(rm.RegisteredData[ctr])
 
 	wsinit := vc.MethodByName("WebSocketInit")
+
 	if wsinit.IsValid() {
 		response.IsWebSocket = true
 		hand := vc.Interface().(interfaces.WebSocketInterface)
 		ws := GetWebSocket(ctr+"-"+fun, hand)
+		ws.Config.MaxMessageSize = 10240
 		hand.SetFunName(fun)
 		hand.WebSocketInit(ws)
 		defer func() {
