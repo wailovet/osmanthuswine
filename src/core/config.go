@@ -12,6 +12,7 @@ type Config struct {
 	Host          string `json:"host"`
 	CrossDomain   string `json:"cross_domain"`
 	ApiRouter     string `json:"api_router"`
+	StaticRouter  string `json:"static_router"`
 	PostMaxMemory int64  `json:"post_max_memory"`
 	Db            struct {
 		Host        string            `json:"host"`
@@ -51,6 +52,7 @@ func GetInstanceConfig() *Config {
 			Host:          "localhost",
 			Port:          "8808",
 			ApiRouter:     "/Api/*",
+			StaticRouter:  "/*",
 			CrossDomain:   "*",
 			PostMaxMemory: 1024 * 1024 * 10,
 			Db: struct {

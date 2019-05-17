@@ -107,7 +107,7 @@ func RunProg(state overseer.State) {
 
 	})
 
-	r.HandleFunc("/*", func(writer http.ResponseWriter, request *http.Request) {
+	r.HandleFunc(cc.StaticRouter, func(writer http.ResponseWriter, request *http.Request) {
 		path := request.URL.Path
 		if path == "/" {
 			path = "/index.html"
