@@ -27,13 +27,11 @@ var chiRouter *chi.Mux
 
 func GetChiRouter() *chi.Mux {
 	if chiRouter == nil {
-
 		chiRouter = chi.NewRouter()
 		chiRouter.Use(middleware.RequestID)
 		chiRouter.Use(middleware.RealIP)
 		chiRouter.Use(middleware.Logger)
 		chiRouter.Use(middleware.Recoverer)
-		chiRouter.Use(middleware.Timeout(60 * time.Second))
 	}
 	return chiRouter
 }
@@ -71,6 +69,10 @@ func RunProg(state overseer.State) {
 	r := GetChiRouter()
 
 	apiRouter := cc.ApiRouter
+
+	if apiRouter == "" {
+		apiRouter = "/Api/*"
+	}
 
 	r.HandleFunc(apiRouter, func(writer http.ResponseWriter, request *http.Request) {
 

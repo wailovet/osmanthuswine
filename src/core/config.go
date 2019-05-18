@@ -101,8 +101,8 @@ func GetInstanceConfig() *Config {
 func (c *Config) ReadConfig(file string) {
 	configText, err := ioutil.ReadFile(file)
 	if err != nil {
-		log.Println("配置文件错误,启动失败:", err.Error())
-		os.Exit(0)
+		log.Println("配置文件读取错误,启动默认配置:", err.Error())
+		return
 	}
 	err = json.Unmarshal(configText, c)
 	if err != nil {
