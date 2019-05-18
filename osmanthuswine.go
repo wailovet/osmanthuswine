@@ -106,7 +106,9 @@ func RunProg(state overseer.State) {
 		core.GetInstanceRouterManage().RouterSend(request.URL.Path, requestData, responseHandle, cc.CrossDomain)
 
 	})
-
+	if cc.StaticRouter == "" {
+		cc.StaticRouter = "/*"
+	}
 	r.HandleFunc(cc.StaticRouter, func(writer http.ResponseWriter, request *http.Request) {
 		path := request.URL.Path
 		if path == "/" {
