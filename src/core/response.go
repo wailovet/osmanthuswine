@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/wailovet/osmanthuswine/src/session"
 	"net/http"
+	"runtime/debug"
 	"strings"
 )
 
@@ -60,7 +61,7 @@ func (r *Response) CheckErrDisplayByError(err error, msg ...string) {
 	if len(msg) > 0 {
 		r.DisplayByError(strings.Join(msg, ","), 504)
 	} else {
-		r.DisplayByError(err.Error(), 504)
+		r.DisplayByError(err.Error(), 504, strings.Split(string(debug.Stack()), "\n\t")...)
 	}
 }
 
