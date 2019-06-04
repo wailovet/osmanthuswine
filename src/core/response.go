@@ -32,6 +32,9 @@ func (r *Response) DisplayByRaw(data []byte) {
 	//log.Println("crossDomain:", cc.CrossDomain)
 	if cc.CrossDomain != "" {
 		r.OriginResponseWriter.Header().Set("Access-Control-Allow-Origin", cc.CrossDomain)
+		r.OriginResponseWriter.Header().Set("Access-Control-Allow-Credentials", "true")
+		r.OriginResponseWriter.Header().Set("Access-Control-Allow-Methods", "Access-Control-Allow-Methods")
+		r.OriginResponseWriter.Header().Set("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With")
 	}
 	r.OriginResponseWriter.Write(data)
 	panic(nil)
