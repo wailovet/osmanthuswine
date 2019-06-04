@@ -112,9 +112,4 @@ func (rm *RouterManage) RouterSend(urlPath string, request Request, response Res
 		f.Call([]reflect.Value{reflect.ValueOf(request), reflect.ValueOf(response)})
 	}
 
-	response.OriginResponseWriter.Header().Set("Content-Type", "application/json;charset=UTF-8")
-	if crossDomain != "" {
-		response.OriginResponseWriter.Header().Set("Access-Control-Allow-Origin", crossDomain)
-	}
-
 }

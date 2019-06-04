@@ -27,6 +27,12 @@ func (r *Response) DisplayByRaw(data []byte) {
 	}
 
 	r.OriginResponseWriter.Header().Add("Content-Type", "application/json; charset=utf-8")
+
+	cc := GetInstanceConfig()
+	//log.Println("crossDomain:", cc.CrossDomain)
+	if cc.CrossDomain != "" {
+		r.OriginResponseWriter.Header().Set("Access-Control-Allow-Origin", cc.CrossDomain)
+	}
 	r.OriginResponseWriter.Write(data)
 	panic(nil)
 }
