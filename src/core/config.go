@@ -89,7 +89,7 @@ func GetInstanceConfig() *Config {
 				Db:       0,
 			},
 			UpdateDir:  "",
-			UpdatePath: os.Args[0] + "_update",
+			UpdatePath: "",
 		}
 
 		instanceConfig.ReadConfig(configFile)
