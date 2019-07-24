@@ -20,6 +20,7 @@ type Request struct {
 	FILES         map[string][]*multipart.FileHeader
 	FILE          *multipart.FileHeader
 	OriginRequest *http.Request
+	OriginValues  url.Values
 }
 
 func (r *Request) SyncGetData(request *http.Request) {
@@ -27,8 +28,12 @@ func (r *Request) SyncGetData(request *http.Request) {
 		r.OriginRequest = request
 	}
 	get := request.URL.Query()
+
+	r.OriginValues = get
 	r.GET = make(map[string]string)
+
 	for k := range get {
+
 		str := request.URL.Query().Get(k)
 		tmp, err := url.QueryUnescape(str)
 		if err != nil {
@@ -51,7 +56,9 @@ func (r *Request) SyncPostData(request *http.Request, mem int64) {
 	r.POST = make(map[string]string)
 
 	post := request.PostForm
+
 	for k := range post {
+		r.OriginValues[k] = post[k]
 		str := request.PostFormValue(k)
 		tmp, err := url.QueryUnescape(str)
 		if err != nil {
@@ -76,6 +83,7 @@ func (r *Request) SyncPostData(request *http.Request, mem int64) {
 
 		mf := request.MultipartForm.Value
 		for k := range mf {
+			r.OriginValues[k] = mf[k]
 			if len(mf[k]) > 0 {
 				r.POST[k] = mf[k][0]
 				r.REQUEST[k] = mf[k][0]
