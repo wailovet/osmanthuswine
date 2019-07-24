@@ -4,17 +4,19 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 )
 
 type Config struct {
-	Port          string `json:"port"`
-	Host          string `json:"host"`
-	CrossDomain   string `json:"cross_domain"`
-	ApiRouter     string `json:"api_router"`
-	StaticRouter  string `json:"static_router"`
-	PostMaxMemory int64  `json:"post_max_memory"`
-	Db            struct {
+	Port             string          `json:"port"`
+	Host             string          `json:"host"`
+	CrossDomain      string          `json:"cross_domain"`
+	ApiRouter        string          `json:"api_router"`
+	StaticRouter     string          `json:"static_router"`
+	StaticFileSystem http.FileSystem `json:"static_file_system"`
+	PostMaxMemory    int64           `json:"post_max_memory"`
+	Db               struct {
 		Host        string            `json:"host"`
 		Port        string            `json:"port"`
 		User        string            `json:"user"`
@@ -49,12 +51,13 @@ func SetConfig(c *Config) {
 func GetInstanceConfig() *Config {
 	if instanceConfig == nil {
 		instanceConfig = &Config{
-			Host:          "localhost",
-			Port:          "8808",
-			ApiRouter:     "/Api/*",
-			StaticRouter:  "/*",
-			CrossDomain:   "*",
-			PostMaxMemory: 1024 * 1024 * 10,
+			Host:             "localhost",
+			Port:             "8808",
+			ApiRouter:        "/Api/*",
+			StaticRouter:     "/*",
+			StaticFileSystem: http.Dir("static"),
+			CrossDomain:      "*",
+			PostMaxMemory:    1024 * 1024 * 10,
 			Db: struct {
 				Host        string            `json:"host"`
 				Port        string            `json:"port"`

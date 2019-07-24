@@ -244,3 +244,12 @@ var ws = new WebSocket("ws://127.0.0.1/Api/Index/Index")
 }
 备注:需要检测的文件路径最好不要与当前运行的文件路径相同
 ```
+
+> 静态资源打包
+```
+$ go get github.com/jteeuwen/go-bindata/...
+$ go get github.com/elazarl/go-bindata-assetfs/...
+$ go-bindata-assetfs static/...
+
+core.GetInstanceConfig().StaticFileSystem = assetFS()
+```

@@ -111,30 +111,37 @@ func RunProg(state overseer.State) {
 	if cc.StaticRouter == "" {
 		cc.StaticRouter = "/*"
 	}
-	r.HandleFunc(cc.StaticRouter, func(writer http.ResponseWriter, request *http.Request) {
-		path := request.URL.Path
-		if path == "/" {
-			path = "/index.html"
-		}
-
-		helper.GetInstanceLog().Out("静态文件:", "./html"+path)
-
-		f, err := os.Stat("./html" + path)
-		if err == nil {
-			if f.IsDir() {
-				path += "/index.html"
+	_, err := os.Stat("./html")
+	if err == nil {
+		//兼容旧版本
+		r.HandleFunc(cc.StaticRouter, func(writer http.ResponseWriter, request *http.Request) {
+			path := request.URL.Path
+			if path == "/" {
+				path = "/index.html"
 			}
-			data, err := ioutil.ReadFile("./html" + path)
+
+			helper.GetInstanceLog().Out("静态文件:", "./html"+path)
+
+			f, err := os.Stat("./html" + path)
 			if err == nil {
-				writer.Write(data)
-				return
+				if f.IsDir() {
+					path += "/index.html"
+				}
+				data, err := ioutil.ReadFile("./html" + path)
+				if err == nil {
+					writer.Write(data)
+					return
+				}
 			}
+			writer.WriteHeader(404)
+			writer.Write([]byte(err.Error()))
+		})
+	} else {
+		if cc.StaticFileSystem == nil {
+			cc.StaticFileSystem = http.Dir("static")
 		}
-
-		writer.WriteHeader(404)
-		writer.Write([]byte(err.Error()))
-
-	})
+		r.Handle(cc.StaticRouter, http.FileServer(cc.StaticFileSystem))
+	}
 
 	http.Serve(state.Listener, r)
 	//http.ListenAndServe(cc.Host+":"+cc.Port, r)

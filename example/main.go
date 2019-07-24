@@ -9,5 +9,6 @@ import (
 func main() {
 	core.GetInstanceRouterManage().Registered(&app.Wstest{})
 	core.GetInstanceRouterManage().Registered(&app.Test{})
+
 	osmanthuswine.Run()
 }
