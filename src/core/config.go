@@ -16,24 +16,27 @@ type Config struct {
 	StaticRouter     string          `json:"static_router"`
 	StaticFileSystem http.FileSystem `json:"static_file_system"`
 	PostMaxMemory    int64           `json:"post_max_memory"`
-	Db               struct {
-		Host        string            `json:"host"`
-		Port        string            `json:"port"`
-		User        string            `json:"user"`
-		Password    string            `json:"password"`
-		Name        string            `json:"name"`
-		Prefix      string            `json:"prefix"`
-		MaxOpenConn int               `json:"max_open_conn"`
-		Params      map[string]string `json:"params"`
-		Debug       bool              `json:"debug"`
-	} `json:"db"`
-	Redis struct {
-		Addr     string `json:"addr"`
-		Password string `json:"password"`
-		Db       int    `json:"db"`
-	} `json:"redis"`
-	UpdateDir  string `json:"update_dir"`
-	UpdatePath string `json:"update_path"`
+	Db               ConfigDb        `json:"db"`
+	Redis            ConfigRedis     `json:"redis"`
+	UpdateDir        string          `json:"update_dir"`
+	UpdatePath       string          `json:"update_path"`
+}
+
+type ConfigDb struct {
+	Host        string            `json:"host"`
+	Port        string            `json:"port"`
+	User        string            `json:"user"`
+	Password    string            `json:"password"`
+	Name        string            `json:"name"`
+	Prefix      string            `json:"prefix"`
+	MaxOpenConn int               `json:"max_open_conn"`
+	Params      map[string]string `json:"params"`
+	Debug       bool              `json:"debug"`
+}
+type ConfigRedis struct {
+	Addr     string `json:"addr"`
+	Password string `json:"password"`
+	Db       int    `json:"db"`
 }
 
 var instanceConfig *Config
@@ -58,17 +61,7 @@ func GetInstanceConfig() *Config {
 			StaticFileSystem: http.Dir("static"),
 			CrossDomain:      "*",
 			PostMaxMemory:    1024 * 1024 * 10,
-			Db: struct {
-				Host        string            `json:"host"`
-				Port        string            `json:"port"`
-				User        string            `json:"user"`
-				Password    string            `json:"password"`
-				Name        string            `json:"name"`
-				Prefix      string            `json:"prefix"`
-				MaxOpenConn int               `json:"max_open_conn"`
-				Params      map[string]string `json:"params"`
-				Debug       bool              `json:"debug"`
-			}{
+			Db: ConfigDb{
 				Host:        "localhost",
 				Port:        "3306",
 				User:        "root",
@@ -82,11 +75,7 @@ func GetInstanceConfig() *Config {
 				},
 				Debug: true,
 			},
-			Redis: struct {
-				Addr     string `json:"addr"`
-				Password string `json:"password"`
-				Db       int    `json:"db"`
-			}{
+			Redis: ConfigRedis{
 				Addr:     "localhost:6379",
 				Password: "",
 				Db:       0,
