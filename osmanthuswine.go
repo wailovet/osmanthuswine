@@ -95,6 +95,10 @@ func RunProg(state overseer.State) {
 		responseHandle := core.Response{OriginResponseWriter: writer, Session: sessionMan}
 
 		defer func() {
+			defer func() {
+				recover()
+			}()
+
 			errs := recover()
 			if errs == nil {
 				return
