@@ -147,6 +147,7 @@ func RunProg(state overseer.State) {
 		r.Handle(cc.StaticRouter, http.FileServer(cc.StaticFileSystem))
 	}
 
+	InstanceListener = state.Listener
 	http.Serve(state.Listener, r)
 	//http.ListenAndServe(cc.Host+":"+cc.Port, r)
 
@@ -169,4 +170,50 @@ func GetCurrentPath() (string, error) {
 		return "", errors.New(`error: Can't find "/" or "\".`)
 	}
 	return string(path[0 : i+1]), nil
+}
+
+var InstanceListener net.Listener
+
+func HandleFunc(pattern string, callback func(request core.Request, response core.Response)) {
+
+	cc := core.GetInstanceConfig()
+	r := GetChiRouter()
+	r.HandleFunc(pattern, func(writer http.ResponseWriter, request *http.Request) {
+
+		requestData := core.Request{}
+
+		sessionMan := session.New(request, writer)
+
+		requestData.REQUEST = make(map[string]string)
+		//GET
+		requestData.SyncGetData(request)
+		//POST
+		requestData.SyncPostData(request, cc.PostMaxMemory)
+		//HEADER
+		requestData.SyncHeaderData(request)
+		//COOKIE
+		requestData.SyncCookieData(request)
+		//SESSION
+		requestData.SyncSessionData(sessionMan)
+
+		responseHandle := core.Response{OriginResponseWriter: writer, Session: sessionMan}
+
+		defer func() {
+			errs := recover()
+			if errs == nil {
+				return
+			}
+			errtxt := fmt.Sprintf("%v", errs)
+			if errtxt != "" {
+				responseHandle.DisplayByError(errtxt, 500, strings.Split(string(debug.Stack()), "\n\t")...)
+			}
+		}()
+
+		responseHandle.OriginResponseWriter.Header().Set("Content-Type", "application/json;charset=UTF-8")
+		if cc.CrossDomain != "" {
+			responseHandle.OriginResponseWriter.Header().Set("Access-Control-Allow-Origin", cc.CrossDomain)
+		}
+
+		callback(requestData, responseHandle)
+	})
 }

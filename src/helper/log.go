@@ -21,7 +21,7 @@ func GetInstanceLog() *Log {
 }
 
 func (l *Log) Out(args ...interface{}) {
-	log.Println(args)
+	log.Println(args...)
 }
 
 func StartLogToFile(dir string) {

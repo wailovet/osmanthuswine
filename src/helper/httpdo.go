@@ -2,6 +2,7 @@ package helper
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"mime/multipart"
@@ -85,4 +86,52 @@ func (that HttpDo) Post() ([]byte, error) {
 
 func (that HttpDo) Get() ([]byte, error) {
 	return that.Request("GET")
+}
+
+func Get(url string, p string) string {
+
+	if strings.Index(url, "https://") == -1 && strings.Index(url, "http://") == -1 {
+		return ""
+	}
+
+	if p != "" {
+		url = fmt.Sprintf("%s?%s", url, p)
+	}
+	resp, err := http.Get(url)
+	if err != nil {
+		// handle error
+		return ""
+	}
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		// handle error
+		return ""
+	}
+
+	return string(body)
+}
+
+func Post(url string, p string) string {
+	if strings.Index(url, "https://") == -1 && strings.Index(url, "http://") == -1 {
+		return ""
+	}
+
+	resp, err := http.Post(url, "application/x-www-form-urlencoded", strings.NewReader(p))
+
+	if err != nil {
+		// handle error
+		return ""
+	}
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		// handle error
+		return ""
+	}
+
+	return string(body)
+
 }
