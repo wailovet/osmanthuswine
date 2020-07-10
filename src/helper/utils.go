@@ -4,11 +4,7 @@ import (
 	"archive/zip"
 	"crypto/md5"
 	"encoding/json"
-	"errors"
 	"fmt"
-	"git.ouxuan.net/hasaki-service/hasaki-sdk/hskgin"
-	"git.ouxuan.net/hasaki-service/hasaki-sdk/hskhttpdo"
-	"git.ouxuan.net/hasaki-service/hasaki-sdk/hsklogger"
 	"io"
 	"io/ioutil"
 	"math/rand"
@@ -137,62 +133,6 @@ func Interface2Interface(in interface{}) (out interface{}) {
 	return
 }
 
-var GetHttpServiceCallAddress = func(service string) (string, int, error) {
-	return "127.0.0.1", 80, nil
-}
-
-func HttpServiceCall(service string, path string, in interface{}, out interface{}) (err error, code int) {
-
-	addr, port, err := GetHttpServiceCallAddress(service)
-
-	if err != nil {
-		return err, code
-	}
-
-	inRaw, err := json.Marshal(in)
-	if err != nil {
-		return err, code
-	}
-
-	url := fmt.Sprintf("%s:%d/%s", addr, port, path)
-	for strings.Index(url, "//") > -1 {
-		url = strings.Replace(url, "//", "/", -1)
-	}
-	//log.Println(string(inRaw))
-	data, err := hskhttpdo.HttpDo{
-		Url: fmt.Sprintf("http://%s", url),
-		Raw: inRaw,
-	}.PostJson()
-
-	hsklogger.Logger.Info("url:", url, "request:", string(inRaw))
-
-	if err != nil {
-		return err, code
-	}
-
-	rd := hskgin.ResponseDataNotData{}
-	err = json.Unmarshal(data, &rd)
-	if err != nil {
-		return err, code
-	}
-
-	code = rd.Code
-	if rd.Code != 200 && rd.Code != 0 {
-		return errors.New(rd.Message), code
-	}
-
-	rdd := hskgin.ResponseData{
-		Data: out,
-	}
-	err = json.Unmarshal(data, &rdd)
-	if err != nil {
-		return err, code
-	}
-	//log.Println(rd.Data)
-
-	return nil, code
-}
-
 func CleanExtraCharacters(a string, b string) string {
 	for strings.Index(a, b+b) > -1 {
 		a = strings.Replace(a, b+b, b, -1)
@@ -229,19 +169,6 @@ func InArray(t string, arr []string) bool {
 	return false
 }
 
-func IsSuperAdmin(ip string) bool {
-	if ip == "127.0.0.1" {
-		return true
-	}
-	return false
-}
-
-func CheckSuperAdmin(ctx *hskgin.GinContextHelper) {
-	if !IsSuperAdmin(ctx.GinContext.ClientIP()) {
-		ctx.DisplayByError("权限不足", 502)
-	}
-}
-
 func Unzip(file string, path string) error {
 	File, err := zip.OpenReader(file)
 	if err != nil {
@@ -276,24 +203,6 @@ func Unzip(file string, path string) error {
 		newFile.Close()
 	}
 	return nil
-}
-
-func TickerHandle(duration int, f func()) {
-	defer func() {
-		if err := recover(); err != nil {
-			hsklogger.Logger.Error("协程错误:", err)
-		}
-		go f()
-	}()
-	go func() {
-		ticker := time.NewTicker(time.Duration(duration) * time.Second)
-		for {
-			select {
-			case <-ticker.C:
-				f()
-			}
-		}
-	}()
 }
 
 func RandomInt(length int) int {
