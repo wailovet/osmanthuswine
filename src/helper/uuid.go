@@ -1,8 +1,8 @@
 package helper
 
-import "github.com/satori/go.uuid"
+import "github.com/google/uuid"
 
 func CreateUUID() string {
-	u1 := uuid.Must(uuid.NewV4())
-	return u1.String()
+	uid := uuid.Must(uuid.NewUUID())
+	return uid.String()
 }
