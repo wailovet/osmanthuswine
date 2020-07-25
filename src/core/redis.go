@@ -1,6 +1,7 @@
 package core
 
 import (
+	"context"
 	"github.com/go-redis/redis"
 	"time"
 )
@@ -20,10 +21,11 @@ func GetRedis() *redis.Client {
 }
 
 func init() {
+	ctx := context.Background()
 	go func() {
-		for ; ; {
+		for {
 			if instanceRedis != nil {
-				err := instanceRedis.Ping().Err()
+				err := instanceRedis.Ping(ctx).Err()
 				if err != nil {
 					println(err.Error())
 					instanceRedis.Close()
