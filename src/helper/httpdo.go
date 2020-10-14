@@ -2,6 +2,7 @@ package helper
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -134,4 +135,29 @@ func Post(url string, p string) string {
 
 	return string(body)
 
+}
+
+func PostRaw(url string, data string) (string, error) {
+	if strings.Index(url, "https://") == -1 && strings.Index(url, "http://") == -1 {
+		return "", errors.New("url error")
+	}
+
+	body := &bytes.Buffer{}
+	body.Write([]byte(data))
+	request, err := http.NewRequest("POST", url, body)
+
+	request.Header.Set("Content-Type", "application/json")
+
+	if err != nil {
+		return "", err
+	}
+	var resp *http.Response
+	resp, err = http.DefaultClient.Do(request)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+	result, err := ioutil.ReadAll(resp.Body)
+
+	return string(result), err
 }
