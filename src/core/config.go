@@ -9,17 +9,18 @@ import (
 )
 
 type Config struct {
-	Port             string          `json:"port"`
-	Host             string          `json:"host"`
-	CrossDomain      string          `json:"cross_domain"`
-	ApiRouter        string          `json:"api_router"`
-	StaticRouter     string          `json:"static_router"`
-	StaticFileSystem http.FileSystem `json:"static_file_system"`
-	PostMaxMemory    int64           `json:"post_max_memory"`
-	Db               ConfigDb        `json:"db"`
-	Redis            ConfigRedis     `json:"redis"`
-	UpdateDir        string          `json:"update_dir"`
-	UpdatePath       string          `json:"update_path"`
+	Port                string          `json:"port"`
+	Host                string          `json:"host"`
+	CrossDomain         string          `json:"cross_domain"`
+	ApiRouter           string          `json:"api_router"`
+	StaticRouter        string          `json:"static_router"`
+	IsStaticStripPrefix bool            `json:"is_static_strip_prefix"`
+	StaticFileSystem    http.FileSystem `json:"static_file_system"`
+	PostMaxMemory       int64           `json:"post_max_memory"`
+	Db                  ConfigDb        `json:"db"`
+	Redis               ConfigRedis     `json:"redis"`
+	UpdateDir           string          `json:"update_dir"`
+	UpdatePath          string          `json:"update_path"`
 }
 
 type ConfigDb struct {

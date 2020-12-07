@@ -144,7 +144,12 @@ func RunProg(state overseer.State) {
 		if cc.StaticFileSystem == nil {
 			cc.StaticFileSystem = http.Dir("static")
 		}
-		r.Handle(cc.StaticRouter, http.FileServer(cc.StaticFileSystem))
+
+		staticHandle := http.FileServer(cc.StaticFileSystem)
+		if cc.IsStaticStripPrefix {
+			staticHandle = http.StripPrefix(strings.Replace(cc.StaticRouter, "*", "", -1), staticHandle)
+		}
+		r.Handle(cc.StaticRouter, staticHandle)
 	}
 
 	InstanceListener = state.Listener
