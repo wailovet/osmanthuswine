@@ -1,6 +1,7 @@
 package core
 
 import (
+	"encoding/json"
 	"github.com/wailovet/osmanthuswine/src/session"
 	"io/ioutil"
 	"log"
@@ -93,6 +94,14 @@ func (r *Request) SyncPostData(request *http.Request, mem int64) {
 
 	body, _ := ioutil.ReadAll(request.Body)
 	r.BODY = string(body)
+
+	rr := map[string]string{}
+	json.Unmarshal([]byte(r.BODY), &rr)
+
+	for e := range rr {
+		r.POST[e] = rr[e]
+		r.REQUEST[e] = rr[e]
+	}
 }
 
 func (r *Request) SyncHeaderData(request *http.Request) {
