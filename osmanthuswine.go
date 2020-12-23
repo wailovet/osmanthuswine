@@ -25,12 +25,21 @@ import (
 
 var chiRouter *chi.Mux
 
+var isDebug = true
+
+func NotDebug() {
+	isDebug = false
+}
+
 func GetChiRouter() *chi.Mux {
 	if chiRouter == nil {
 		chiRouter = chi.NewRouter()
+		if isDebug {
+			chiRouter.Use(middleware.Logger)
+		}
+
 		chiRouter.Use(middleware.RequestID)
 		chiRouter.Use(middleware.RealIP)
-		chiRouter.Use(middleware.Logger)
 		chiRouter.Use(middleware.Recoverer)
 	}
 	return chiRouter
