@@ -3,13 +3,6 @@ package osmanthuswine
 import (
 	"errors"
 	"fmt"
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
-	"github.com/wailovet/osmanthuswine/src/core"
-	"github.com/wailovet/osmanthuswine/src/helper"
-	"github.com/wailovet/osmanthuswine/src/session"
-	"github.com/wailovet/overseer"
-	"github.com/wailovet/overseer/fetcher"
 	"io/ioutil"
 	"log"
 	"net"
@@ -21,6 +14,14 @@ import (
 	"runtime/debug"
 	"strings"
 	"time"
+
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
+	"github.com/wailovet/osmanthuswine/src/core"
+	"github.com/wailovet/osmanthuswine/src/helper"
+	"github.com/wailovet/osmanthuswine/src/session"
+	"github.com/wailovet/overseer"
+	"github.com/wailovet/overseer/fetcher"
 )
 
 var chiRouter *chi.Mux
@@ -117,6 +118,13 @@ func RunProg(state overseer.State) {
 				responseHandle.DisplayByError(errtxt, 500, strings.Split(string(debug.Stack()), "\n\t")...)
 			}
 		}()
+
+		origin := request.Header.Get("Origin")
+		if origin != "" {
+			responseHandle.OriginResponseWriter.Header().Set("Access-Control-Allow-Origin", origin)
+		} else if cc.CrossDomain != "" {
+			responseHandle.OriginResponseWriter.Header().Set("Access-Control-Allow-Origin", cc.CrossDomain)
+		}
 
 		core.GetInstanceRouterManage().RouterSend(request.URL.Path, requestData, responseHandle, cc.CrossDomain)
 
@@ -224,7 +232,11 @@ func HandleFunc(pattern string, callback func(request core.Request, response cor
 		}()
 
 		responseHandle.OriginResponseWriter.Header().Set("Content-Type", "application/json;charset=UTF-8")
-		if cc.CrossDomain != "" {
+
+		origin := request.Header.Get("Origin")
+		if origin != "" {
+			responseHandle.OriginResponseWriter.Header().Set("Access-Control-Allow-Origin", origin)
+		} else if cc.CrossDomain != "" {
 			responseHandle.OriginResponseWriter.Header().Set("Access-Control-Allow-Origin", cc.CrossDomain)
 		}
 

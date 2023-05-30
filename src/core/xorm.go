@@ -1,10 +1,11 @@
 package core
 
 import (
-	"github.com/go-sql-driver/mysql"
-	"github.com/xormplus/core"
-	"github.com/xormplus/xorm"
 	"time"
+
+	"github.com/go-sql-driver/mysql"
+	"xorm.io/core"
+	"xorm.io/xorm"
 )
 
 type Xorm struct {
